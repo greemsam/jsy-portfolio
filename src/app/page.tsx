@@ -1,18 +1,24 @@
-import { adminDb } from "@/lib/firebase-admin";
-
+import { getPublishedArtworks } from "@/services/artwork.service";
 export default async function Home() {
-  const snapshot = await adminDb.collection("artworks").get();
+    const artworks = await getPublishedArtworks();
 
-  const artworks = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+    return (
+        <main>
+        <h1>Artworks</h1>
 
-  return (
-    <main>
-      <h1>Artworks</h1>
-
-      <pre>{JSON.stringify(artworks, null, 2)}</pre>
-    </main>
-  );
+        {artworks.length === 0 ? (
+            <p>등록된 작품이 없습니다.</p>
+        ) : (
+            <ul>
+                {artworks.map((artwork) => (
+                    <li key={artwork.artId}>
+                        <strong>{artwork.title}</strong>
+                        <p>{artwork.year}</p>
+                        <p>{artwork.medium}</p>
+                    </li>
+                ))}
+            </ul>
+        )}
+        </main>
+    );
 }
