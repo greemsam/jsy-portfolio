@@ -1,11 +1,12 @@
 import { adminDb } from "@/lib/firebase-admin";
+import { drive } from "@/lib/google-drive";
 import type { Artwork } from "@/types/artwork";
 
 export async function getPublishedArtworks(): Promise<Artwork[]> {
-  const snapshot = await adminDb
-    .collection("artworks")
-    .where("published", "==", true)
-    .get();
+    const snapshot = await adminDb
+        .collection("artworks")
+        .where("published", "==", true)
+        .get();
 
     return snapshot.docs.map((doc) => {
         const data = doc.data();
@@ -24,4 +25,21 @@ export async function getPublishedArtworks(): Promise<Artwork[]> {
             updatedAt: data.updatedAt?.toDate?.().toISOString() ?? null,
         };
     });
+}
+
+
+export async function getDriveFiles() {
+    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+
+    if (!folderId) {
+        throw new Error("GOOGLE_DRIVE_FOLDER_ID is not defined");
+    }
+
+    const response = await drive.files.list({
+        q: `'${folderId}' in parents and trashed = false`,
+        fields: "files(id, name, mimeType, modifiedTime, thumbnailLink)",
+        orderBy: "name",
+    });
+
+    return response.data.files ?? [];
 }
