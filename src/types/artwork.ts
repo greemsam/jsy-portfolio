@@ -1,3 +1,11 @@
+import { google, drive_v3 } from "googleapis";
+
+export type DriveFile = drive_v3.Schema$File
+export type ArtInfoFromGoogleDrive = {
+    year: string
+    files: DriveFile[]
+}
+
 export type ArtworkSize = {
     width: number;
     height: number;

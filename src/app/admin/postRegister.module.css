@@ -1,0 +1,35 @@
+.postRegisterCover{
+    position: fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.2);
+}
+.postRegister{
+    position: absolute;
+    left:50%;
+    top:50%;
+    width:100%;
+    max-width:var(--maxWidth);
+    border-radius:4px;
+    transform:translate(-50%, -50%);
+    background:#fff;
+    padding:12px;
+    overflow: hidden;
+}
+.yearSelector {
+    height:32px;
+    margin-top:30px;
+    border:1px solid #ddd;
+}
+
+.fileList{
+    margin-top:30px;
+}
+.fileInfo{
+    line-height:32px;
+}
+.fileCheckbox{
+    margin-right:10px;
+}

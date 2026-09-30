@@ -1,31 +1,13 @@
-import { getPublishedArtworks, getDriveFiles } from "@/services/artwork.service";
-
+import { getPublishedArtworks } from "@/lib/firebase-admin";
+import { getDriveFiles, getPortfolioYears,} from "@/lib/google-drive";
 
 export default async function Home() {
-    const artworks = await getPublishedArtworks();
-    const files = await getDriveFiles();
+
     return (
         <main>
-            <h1>Google Drive</h1>
+            <h1>Portfolio</h1>
 
-            <pre>
-                {JSON.stringify(files, null, 4)}
-            </pre>
-            <h1>Artworks</h1>
-
-            {artworks.length === 0 ? (
-                <p>등록된 작품이 없습니다.</p>
-            ) : (
-                <ul>
-                    {artworks.map((artwork) => (
-                        <li key={artwork.artId}>
-                            <strong>{artwork.title}</strong>
-                            <p>{artwork.year}</p>
-                            <p>{artwork.medium}</p>
-                        </li>
-                    ))}
-                </ul>
-            )}
+            홈
         </main>
     );
 }
