@@ -6,30 +6,84 @@
     height:100%;
     background:rgba(0,0,0,0.2);
 }
-.postRegister{
+.postRegisterDialog{
     position: absolute;
     left:50%;
     top:50%;
     width:100%;
-    max-width:var(--maxWidth);
+    max-width:424px;
     border-radius:4px;
     transform:translate(-50%, -50%);
     background:#fff;
     padding:12px;
     overflow: hidden;
 }
+.postRegisterHeader {
+    display:flex; 
+}
+.postRegisterHeader button{
+    margin-left:auto;
+}
+.textInfo{
+    margin-top:30px;
+}
+.textInfo input{
+    display:block; 
+    height:32px; 
+    border:1px solid #ddd;
+    padding-left:10px;
+    border-radius:4px;
+    width:100%; 
+    max-width:400px;
+}
+.textInfo textarea{
+    display:block;
+    width:100%; 
+    max-width:400px;
+    height:160px;
+    border:1px solid #ddd;
+    border-radius:4px;
+    padding:10px;
+}
+.imgSelection{
+    margin-top:30px;
+}
 .yearSelector {
     height:32px;
-    margin-top:30px;
     border:1px solid #ddd;
 }
 
 .fileList{
-    margin-top:30px;
+    display:flex;
+    flex-wrap: wrap;
+    gap:6px;
+    margin-top:12px;
 }
-.fileInfo{
+.fileList div{
+    width:calc(50% - 6px);
+}
+.fileList div label{
+    display:block;
     line-height:32px;
+    border:1px solid #f6f6f6;
+    background:#f6f6f6;
+    padding:0 12px;
+    border-radius:4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    font-size:14px;
 }
-.fileCheckbox{
-    margin-right:10px;
+.fileList .fileCheckbox{
+    display:none;
+}
+.fileList .fileCheckbox:checked + label {
+    border:1px solid #ddd;
+}
+.registerPost{
+    display:block; 
+    margin:20px auto;
+    width:240px; 
+    height:32px;
 }

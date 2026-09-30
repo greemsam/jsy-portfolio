@@ -20,7 +20,6 @@ export default function postRegister({ data, onClose }:{data:ArtInfoFromGoogleDr
             );
         }
     };
-
     const handleRegister = () => {
         const artwork = {
             year: selectedYear,
@@ -34,31 +33,10 @@ export default function postRegister({ data, onClose }:{data:ArtInfoFromGoogleDr
     const selectedData = data.find((item) => item.year === selectedYear);
     return (
         <div className={styles.postRegisterCover}>
-            <div className={styles.postRegister}>
-                <h2>작품 등록 <button onClick={onClose}>닫기</button> </h2>
-                <select id="yearSelector" className={styles.yearSelector}>
-                    {data.map((item) => (
-                        <option key={item.year} onClick={() => setSelectedYear(item.year)}>
-                            {item.year}
-                        </option>
-                    ))}
-                </select>
-                <div className={styles.fileList}>
-                    {selectedData?.files.map((file) => (
-                        <div className={styles.fileInfo} key={file.id}>
-                            {file.id && (
-                                <>
-                                    <input id={file.id} 
-                                        className={styles.fileCheckbox} 
-                                        name={'files'}
-                                        type="checkbox" 
-                                        onChange={(e)=>handleImageCheck(file, e.target.checked)} 
-                                    />
-                                    <label htmlFor={file.id}>{file.name}</label>
-                                </>
-                            )}
-                        </div>
-                    ))}
+            <div className={styles.postRegisterDialog}>
+                <div className={styles.postRegisterHeader}>
+                    <h2>작품 등록</h2>
+                    <button onClick={onClose}>닫기</button> 
                 </div>
                 <div className={styles.textInfo}>
                     <input type="text" 
@@ -72,7 +50,35 @@ export default function postRegister({ data, onClose }:{data:ArtInfoFromGoogleDr
                         placeholder={'설명 입력'}
                     />
                 </div>
-                <button type="button" onClick={handleRegister}>등록</button>
+                <div className={styles.imgSelection}>
+                    <select id="yearSelector" className={styles.yearSelector} value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+                        {data.map((item) => (
+                            <option key={item.year}>
+                                {item.year}
+                            </option>
+                        ))}
+                    </select>
+                    <div className={styles.fileList}>
+                        {selectedData?.files.map((file) => (
+                            <div key={file.id}>
+                                <input id={`${file.id}`}
+                                    className={styles.fileCheckbox} 
+                                    name={'files'}
+                                    type="checkbox" 
+                                    onChange={(e)=>handleImageCheck(file, e.target.checked)} 
+                                />
+                                <label htmlFor={`${file.id}`}>
+                                    {file.name}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <input type="number" placeholder="제작년도" maxLength={4}/>
+                    <input type="text" placeholder="재료"/>
+                </div>
+                <button className={styles.registerPost} type="button" onClick={handleRegister}>등록</button>
             </div>
         </div>
     );
