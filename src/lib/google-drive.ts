@@ -58,3 +58,17 @@ export async function getDriveFiles(folderId: string) {
 
     return response.data.files ?? [];
 }
+
+export async function downloadDriveFile(fileId: string): Promise<Buffer> {
+    const response = await drive.files.get(
+        {
+            fileId,
+            alt: "media",
+        },
+        {
+            responseType: "arraybuffer",
+        }
+    );
+
+    return Buffer.from(response.data as ArrayBuffer);
+}

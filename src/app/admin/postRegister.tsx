@@ -20,7 +20,7 @@ export default function postRegister({ data, onClose }:{data:ArtInfoFromGoogleDr
             );
         }
     };
-    const handleRegister = () => {
+    const handleRegister = async () => {
         const artwork = {
             year: selectedYear,
             title,
@@ -28,7 +28,16 @@ export default function postRegister({ data, onClose }:{data:ArtInfoFromGoogleDr
             images: selectedImgFiles,
         };
 
-        console.log(artwork);
+        const response = await fetch("/api/artworks", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(artwork),
+        });
+
+        const result = await response.json();
+        console.log(result);
     };
     const selectedData = data.find((item) => item.year === selectedYear);
     return (

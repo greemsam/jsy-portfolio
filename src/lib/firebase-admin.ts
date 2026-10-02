@@ -1,5 +1,6 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 import type { Artwork } from "@/types/artwork";
 
 const firebaseAdminApp = getApps().length === 0
@@ -9,7 +10,9 @@ const firebaseAdminApp = getApps().length === 0
             clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
             privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
         }),
-      })
+        // Firebase Storage에서 사용할 기본 bucket
+        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    })
     : getApps()[0];
 
 const adminDb = getFirestore(firebaseAdminApp);
@@ -38,3 +41,4 @@ export async function getPublishedArtworks(): Promise<Artwork[]> {
         };
     });
 }
+export const adminStorage = getStorage(firebaseAdminApp);
