@@ -1,5 +1,5 @@
-import { getPublishedArtworks } from "@/lib/firebase-admin";
-import { getDriveFiles, getPortfolioYears,} from "@/lib/google-drive";
+import { getPublishedArtworks } from "@/__backend/lib/firebase-admin";
+import { getDriveFiles, getPortfolioYears,} from "@/__backend/lib/google-drive";
 
 export default async function Home() {
 

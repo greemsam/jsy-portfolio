@@ -1,31 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import { useAdminStore } from "@/__frontend/admin/stores";
 import styles from "./postRegister.module.css";
-import type { ArtInfoFromGoogleDrive,  DriveFile} from "@/types/artwork"
 
-export default function postRegister({ data, onClose }:{data:ArtInfoFromGoogleDrive[], onClose:()=>void}) {
-    
-    const [selectedYear, setSelectedYear] = useState(data[0]?.year)
-    const [selectedImgFiles, setSelectedImgFiles] = useState<DriveFile[]>([])
-    const [title, setTitle] = useState<string>('')
-    const [description, setDescription] = useState<string>('')
-
-    const handleImageCheck = (file: DriveFile, checked: boolean) => {
-        if (checked) {
-            setSelectedImgFiles((prev) => [...prev, file]);
-        } else {
-            setSelectedImgFiles((prev) =>
-                prev.filter((item) => item.id !== file.id)
-            );
-        }
-    };
+export default function postRegister() {
+    const {
+        driveFiles,
+        selectedYear,
+        selectedDriveFiles,
+        title,
+        description,
+        setSelectedYear,
+        setTitle,
+        setDescription,
+        handleDriveFileCheck,
+    } = useAdminStore();
+    const selectedYearGroup = driveFiles.find(
+        (item) => item.year === selectedYear
+    );
     const handleRegister = async () => {
+        // 서버에 전달할 작품 등록 데이터
         const artwork = {
             year: selectedYear,
             title,
             description,
-            images: selectedImgFiles,
+            images: selectedDriveFiles,
         };
 
         const response = await fetch("/api/artworks", {
@@ -37,9 +37,9 @@ export default function postRegister({ data, onClose }:{data:ArtInfoFromGoogleDr
         });
 
         const result = await response.json();
+
         console.log(result);
     };
-    const selectedData = data.find((item) => item.year === selectedYear);
     return (
         <div className={styles.postRegisterCover}>
             <div className={styles.postRegisterDialog}>
@@ -61,22 +61,29 @@ export default function postRegister({ data, onClose }:{data:ArtInfoFromGoogleDr
                 </div>
                 <div className={styles.imgSelection}>
                     <select id="yearSelector" className={styles.yearSelector} value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-                        {data.map((item) => (
+                        {driveFiles.map((item) => (
                             <option key={item.year}>
                                 {item.year}
                             </option>
                         ))}
                     </select>
                     <div className={styles.fileList}>
-                        {selectedData?.files.map((file) => (
+                        {selectedYearGroup?.files.map((file) => (
                             <div key={file.id}>
-                                <input id={`${file.id}`}
-                                    className={styles.fileCheckbox} 
-                                    name={'files'}
-                                    type="checkbox" 
-                                    onChange={(e)=>handleImageCheck(file, e.target.checked)} 
+                                <input
+                                    id={file.id}
+                                    className={styles.fileCheckbox}
+                                    name="files"
+                                    type="checkbox"
+                                    onChange={(e) =>
+                                        handleDriveFileCheck(
+                                            file,
+                                            e.target.checked
+                                        )
+                                    }
                                 />
-                                <label htmlFor={`${file.id}`}>
+
+                                <label htmlFor={file.id}>
                                     {file.name}
                                 </label>
                             </div>

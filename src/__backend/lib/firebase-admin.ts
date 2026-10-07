@@ -15,7 +15,7 @@ const firebaseAdminApp = getApps().length === 0
     })
     : getApps()[0];
 
-const adminDb = getFirestore(firebaseAdminApp);
+export const adminDb = getFirestore(firebaseAdminApp);
 
 export async function getPublishedArtworks(): Promise<Artwork[]> {
     const snapshot = await adminDb
