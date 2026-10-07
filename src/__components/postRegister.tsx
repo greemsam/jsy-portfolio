@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useAdminStore } from "@/__frontend/admin/stores";
+import { useAdminStore } from "@/__stores";
 import styles from "./postRegister.module.css";
-
-export default function postRegister() {
+type Props = {
+    onClose: () => void;
+};
+export default function postRegister({ onClose }: Props) {
     const {
         driveFiles,
         selectedYear,

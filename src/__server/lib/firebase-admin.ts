@@ -1,7 +1,7 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
-import type { Artwork } from "@/types/artwork";
+import type { Artwork } from "@/__types/artwork";
 
 const firebaseAdminApp = getApps().length === 0
     ? initializeApp({

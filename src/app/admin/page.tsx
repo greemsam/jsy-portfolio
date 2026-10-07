@@ -1,12 +1,9 @@
-import { useAdminStore } from "@/__frontend/admin/stores";
-import PostManager from '@/__frontend/admin/components/postManager'
+import { getAdminArtworkData } from "@/__server/services/artwork.service";
+import PostManager from "@/__components/postManager";
 import styles from "./page.module.css";
-export default async function AdminPage() {
 
-    return (
-        <div className={styles.adminMain}>
-            <h1>JSY PORTFOLIO</h1>
-            <PostManager/>
-        </div>
-    );
+export default async function AdminPage() {
+    const data = await getAdminArtworkData();
+
+    return <PostManager initialData={data} />;
 }

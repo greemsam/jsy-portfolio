@@ -1,4 +1,4 @@
-export type DriveFile = { //Google Drive 파일 한 장
+export type DriveFile = {
     id: string;
     name: string;
     mimeType: string;

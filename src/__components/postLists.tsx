@@ -1,9 +1,9 @@
 "use client";
-import { useAdminStore } from "@/__frontend/admin/stores";
+
+import { useAdminStore } from "@/__stores";
 
 export default function PostLists() {
     const artworks = useAdminStore((state) => state.artworks);
-
     return (
         <div>
             {artworks.map((artwork) => (

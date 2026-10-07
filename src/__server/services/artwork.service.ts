@@ -1,10 +1,10 @@
-import { getAllDriveFiles } from "@/__backend/lib/google-drive";
+
 import sharp from "sharp";
-import { adminDb } from "@/__backend/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
-import { downloadDriveFile } from "@/__backend/lib/google-drive";
-import { uploadArtworkImage } from "@/__backend/lib/firebase-storage";
-import type { DriveFile } from "@/types/drive";
+import { getAllDriveFiles, downloadDriveFile } from "@/__server/lib/google-drive";
+import { adminDb } from "@/__server/lib/firebase-admin";
+import { uploadArtworkImage } from "@/__server/lib/firebase-storage";
+import type { DriveFile } from "@/__types/drive";
 
 type ArtworkRegisterRequest = {
     year: string;

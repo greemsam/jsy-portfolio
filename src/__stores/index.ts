@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import type { Artwork } from "@/types/artwork";
-import type { DriveFile, DriveYearGroup } from "@/types/drive";
+import type { Artwork } from "@/__types/artwork";
+import type { DriveFile, DriveYearGroup } from "@/__types/drive";
 
 
 
@@ -24,7 +24,7 @@ type AdminStore = {
     setSelectedYear: (year: string) => void;
     setTitle: (title: string) => void;
     setDescription: (description: string) => void;
-    loadAdminData:() => void
+    loadArtworks:() => void
     handleDriveFileCheck: (
         file: DriveFile,
         checked: boolean
@@ -47,20 +47,13 @@ export const useAdminStore = create<AdminStore>((set) => ({
     setSelectedYear: (selectedYear) => set({ selectedYear }),
     setTitle: (title) => set({ title }),
     setDescription: (description) => set({ description }),
-    loadAdminData: async () => {
-        // 관리자 화면에 필요한 초기 데이터를 서버에서 조회
-        const response = await fetch("/api/admin/artworks");
+    loadArtworks: async () => {
+        // 브라우저에서는 backend service에 직접 접근할 수 없으므로 API 호출
+        const response = await fetch("/api/artworks");
+        const artworks = await response.json();
 
-        // 서버에서 반환한 작품 목록과 Drive 파일 목록
-        const data = await response.json();
-
-        set({
-            artworks: data.artworks,
-            driveFiles: data.driveFiles,
-            selectedYear: data.driveFiles[0]?.year ?? "",
-        });
+        set({ artworks });
     },
-
     handleDriveFileCheck: (file, checked) =>
         set((state) => ({
             selectedDriveFiles: checked

@@ -1,4 +1,4 @@
-import { adminStorage } from "@/__backend/lib/firebase-admin";
+import { adminStorage } from "@/__server/lib/firebase-admin";
 
 type UploadArtworkImageParams = {
     year: string;

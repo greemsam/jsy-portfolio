@@ -1,5 +1,5 @@
 import { google } from "googleapis";
-
+import type { DriveFile } from "@/__types/drive";
 const auth = new google.auth.GoogleAuth({
     credentials: {
         client_email: process.env.FIREBASE_CLIENT_EMAIL,
@@ -49,14 +49,20 @@ export async function getAllDriveFiles() {
     );
 }
 
-export async function getDriveFiles(folderId: string) {
+export async function getDriveFiles(folderId: string): Promise<DriveFile[]> {
     const response = await drive.files.list({
         q: `'${folderId}' in parents and trashed = false`,
-        fields: "files(id, name, mimeType, modifiedTime, thumbnailLink)",
+        fields: "files(id, name,mimeType, modifiedTime, thumbnailLink)",
         orderBy: "name",
     });
 
-    return response.data.files ?? [];
+    return (response.data.files ?? []).map((file) => ({
+        id: file.id ?? "",
+        name: file.name ?? "",
+        mimeType: file.mimeType ?? "",
+        modifiedTime: file.modifiedTime ?? "",
+        thumbnailLink: file.thumbnailLink ?? "",
+    }));
 }
 
 export async function downloadDriveFile(fileId: string): Promise<Buffer> {
