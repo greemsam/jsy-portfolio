@@ -1,0 +1,13 @@
+.postThumbnailWrapper{
+    width:100px;
+    height:100px; 
+    overflow: hidden;
+}
+.postThumbnail{
+    display:block;
+    width:100%;
+}
+.noImg {
+    font-size:14px;
+    background: #eee
+}

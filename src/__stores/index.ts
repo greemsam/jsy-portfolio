@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import type { Artwork } from "@/__types/artwork";
+import type { Post } from "@/__types/artwork";
 import type { DriveFile, DriveYearGroup } from "@/__types/drive";
 
 
 
 type AdminStore = {
     // Firestore에 등록된 작품
-    artworks: Artwork[];
+    posts: Post[];
 
     // Google Drive에서 가져온 연도별 원본 파일
     driveFiles: DriveYearGroup[];
@@ -16,15 +16,17 @@ type AdminStore = {
     selectedDriveFiles: DriveFile[];
     title: string;
     description: string;
+    medium:string
 
     // actions
-    setArtworks: (artworks: Artwork[]) => void;
+    setPosts: (post: Post[]) => void;
     setDriveFiles: (driveFiles: DriveYearGroup[]) => void;
 
     setSelectedYear: (year: string) => void;
     setTitle: (title: string) => void;
     setDescription: (description: string) => void;
-    loadArtworks:() => void
+    setMedium : (medium: string) => void
+    loadPosts:() => void
     handleDriveFileCheck: (
         file: DriveFile,
         checked: boolean
@@ -34,25 +36,26 @@ type AdminStore = {
 };
 
 export const useAdminStore = create<AdminStore>((set) => ({
-    artworks: [],
+    posts: [],
     driveFiles: [],
 
     selectedYear: "",
     selectedDriveFiles: [],
     title: "",
     description: "",
-
-    setArtworks: (artworks) => set({ artworks }),
+    medium:"",
+    setPosts: (posts) => set({ posts }),
     setDriveFiles: (driveFiles) => set({ driveFiles, selectedYear: driveFiles[0]?.year ?? "",}),
     setSelectedYear: (selectedYear) => set({ selectedYear }),
     setTitle: (title) => set({ title }),
     setDescription: (description) => set({ description }),
-    loadArtworks: async () => {
+    setMedium: (medium) => set({ medium }),
+    loadPosts: async () => {
         // 브라우저에서는 backend service에 직접 접근할 수 없으므로 API 호출
-        const response = await fetch("/api/artworks");
-        const artworks = await response.json();
+        const response = await fetch("/api/posts");
+        const posts = await response.json();
 
-        set({ artworks });
+        set({ posts });
     },
     handleDriveFileCheck: (file, checked) =>
         set((state) => ({

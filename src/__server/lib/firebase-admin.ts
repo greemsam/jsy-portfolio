@@ -1,7 +1,7 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
-import type { Artwork } from "@/__types/artwork";
+import type { Post } from "@/__types/artwork";
 
 const firebaseAdminApp = getApps().length === 0
     ? initializeApp({
@@ -17,7 +17,7 @@ const firebaseAdminApp = getApps().length === 0
 
 export const adminDb = getFirestore(firebaseAdminApp);
 
-export async function getPublishedArtworks(): Promise<Artwork[]> {
+export async function getPublishedArtworks(): Promise<Post[]> {
     const snapshot = await adminDb
         .collection("artworks")
         .where("published", "==", true)
@@ -26,7 +26,7 @@ export async function getPublishedArtworks(): Promise<Artwork[]> {
     return snapshot.docs.map((doc) => {
         const data = doc.data();
         return {
-            artId: doc.id,
+            postId: doc.id,
             year: data.year ?? "",
             title: data.title ?? "",
             description: data.description ?? "",

@@ -1,9 +1,8 @@
-import { getAdminArtworkData } from "@/__server/services/artwork.service";
+import { getAdminInitialData } from "@/__server/services/post.service";
 import PostManager from "@/__components/postManager";
-import styles from "./page.module.css";
 
 export default async function AdminPage() {
-    const data = await getAdminArtworkData();
+    const data = await getAdminInitialData();
 
     return <PostManager initialData={data} />;
 }

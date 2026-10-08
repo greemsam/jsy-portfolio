@@ -6,12 +6,14 @@ export type ArtworkSize = {
 
 export type ArtworkImage = {
     driveFileId: string;
-    thumbnailUrl: string;
-    displayUrl: string;
+    thumbnailPath: string;
+    displayPath: string;
+    thumbnailUrl:string
+    displayUrl:string
 };
 
-export type Artwork = {
-    artId: string;
+export type Post = {
+    postId: string;
     year: string;
     title: string;
     description: string;

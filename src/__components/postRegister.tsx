@@ -1,7 +1,7 @@
 "use client";
 
 import { useAdminStore } from "@/__stores";
-import styles from "./postRegister.module.css";
+import styles from "@/__cssModules/admin/postRegister.module.css";
 type Props = {
     onClose: () => void;
 };
@@ -12,7 +12,9 @@ export default function postRegister({ onClose }: Props) {
         selectedDriveFiles,
         title,
         description,
+        medium,
         setSelectedYear,
+        setMedium,
         setTitle,
         setDescription,
         handleDriveFileCheck,
@@ -22,19 +24,20 @@ export default function postRegister({ onClose }: Props) {
     );
     const handleRegister = async () => {
         // 서버에 전달할 작품 등록 데이터
-        const artwork = {
+        const post = {
             year: selectedYear,
             title,
             description,
             images: selectedDriveFiles,
+            medium,
         };
-
-        const response = await fetch("/api/artworks", {
+        
+        const response = await fetch("/api/posts", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(artwork),
+            body: JSON.stringify(post),
         });
 
         const result = await response.json();
@@ -76,12 +79,7 @@ export default function postRegister({ onClose }: Props) {
                                     className={styles.fileCheckbox}
                                     name="files"
                                     type="checkbox"
-                                    onChange={(e) =>
-                                        handleDriveFileCheck(
-                                            file,
-                                            e.target.checked
-                                        )
-                                    }
+                                    onChange={(e) => handleDriveFileCheck(file, e.target.checked)}
                                 />
 
                                 <label htmlFor={file.id}>
@@ -92,8 +90,7 @@ export default function postRegister({ onClose }: Props) {
                     </div>
                 </div>
                 <div>
-                    <input type="number" placeholder="제작년도" maxLength={4}/>
-                    <input type="text" placeholder="재료"/>
+                    <input type="text" placeholder="재료" value={medium} onChange={(e) => setMedium(e.target.value)}/>
                 </div>
                 <button className={styles.registerPost} type="button" onClick={handleRegister}>등록</button>
             </div>

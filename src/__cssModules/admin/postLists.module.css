@@ -1,0 +1,28 @@
+.postList{
+    min-width:320px;
+    width:100%;
+    max-width:400px;
+    display:flex;
+    gap:8px;
+}
+.postList article {
+    width:calc(100% - 120px);
+    height:100px;
+    display:flex;
+    flex-direction: column;
+    gap:6px;
+}
+.imgTitle{
+    font-weight:400;
+    font-size:14px;
+}
+.postList p{
+    color:#888;
+    font-size:14px;
+    font-weight: 400;
+    height:40px;
+    overflow:hidden;
+}
+.postList .updatedAt{
+    font-size:12px;
+}

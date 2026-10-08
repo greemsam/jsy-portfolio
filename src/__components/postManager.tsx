@@ -4,25 +4,25 @@ import { useEffect, useState } from "react";
 import { useAdminStore } from "@/__stores";
 import PostLists from "./postLists";
 import PostRegister from "./postRegister";
-import type { Artwork } from "@/__types/artwork";
+import type { Post } from "@/__types/artwork";
 import type { DriveYearGroup } from "@/__types/drive";
 
 type Props = {
     initialData: {
-        artworks: Artwork[];
+        posts: Post[];
         driveFiles: DriveYearGroup[];
     };
 };
 
 export default function PostManager({ initialData }: Props) {
     const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-    const setArtworks = useAdminStore((state) => state.setArtworks);
+    const setPosts = useAdminStore((state) => state.setPosts);
     const setDriveFiles = useAdminStore((state) => state.setDriveFiles);
 
     useEffect(() => {
-        setArtworks(initialData.artworks);
+        setPosts(initialData.posts);
         setDriveFiles(initialData.driveFiles);
-    }, [initialData, setArtworks, setDriveFiles]);
+    }, [initialData, setPosts, setDriveFiles]);
 
     return (
         <>

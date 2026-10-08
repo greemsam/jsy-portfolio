@@ -2,8 +2,8 @@
 import sharp from "sharp";
 import { FieldValue } from "firebase-admin/firestore";
 import { getAllDriveFiles, downloadDriveFile } from "@/__server/lib/google-drive";
-import { adminDb } from "@/__server/lib/firebase-admin";
 import { uploadArtworkImage } from "@/__server/lib/firebase-storage";
+import { adminDb } from "@/__server/lib/firebase-admin";
 import type { DriveFile } from "@/__types/drive";
 
 type ArtworkRegisterRequest = {
@@ -16,6 +16,8 @@ export type ArtworkImage = {
     driveFileId: string;
     thumbnailPath: string;
     displayPath: string;
+    thumbnailUrl:string;
+    displayUrl:string
 };
 
 async function processArtworkImage(year: string, image: DriveFile):Promise<ArtworkImage> {
@@ -58,6 +60,8 @@ async function processArtworkImage(year: string, image: DriveFile):Promise<Artwo
         driveFileId: image.id,
         thumbnailPath: uploadedImage.thumbnailPath,
         displayPath: uploadedImage.displayPath,
+        thumbnailUrl: uploadedImage.thumbnailUrl,
+        displayUrl: uploadedImage.displayUrl,
     };
 }
 export async function postArtworks(request: Request) {
@@ -80,7 +84,7 @@ export async function postArtworks(request: Request) {
         data.images.map((image) => processArtworkImage(data.year, image))
     );
     // Firestore에 저장할 작품 데이터
-    const artwork = {
+    const post = {
         year: data.year,
         title: data.title,
         description: data.description,
@@ -100,17 +104,17 @@ export async function postArtworks(request: Request) {
         createdAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp(),
     };
-    const artworkRef = await adminDb.collection("artworks").add(artwork);
+    const postRef = await adminDb.collection("posts").add(post);
     return Response.json({
         success: true,
-        artId: artworkRef.id,
+        postId: postRef.id,
     });
 }
 
-export async function getArtworks() {
+export async function getPosts() {
     // Firestore에서 등록된 전체 작품 조회
     const snapshot = await adminDb
-        .collection("artworks")
+        .collection("posts")
         .orderBy("createdAt", "desc")
         .get();
 
@@ -118,7 +122,7 @@ export async function getArtworks() {
         const data = doc.data();
 
         return {
-            artId: doc.id,
+            postId: doc.id,
             year: data.year ?? "",
             title: data.title ?? "",
             description: data.description ?? "",
@@ -134,16 +138,15 @@ export async function getArtworks() {
         };
     });
 }
-export async function getAdminArtworkData() {
+export async function getAdminInitialData() {
     // 관리자 페이지에 필요한 Drive 파일과 등록 작품을 동시에 조회
-    const [driveFiles, artworks] = await Promise.all([
+    const [driveFiles, posts] = await Promise.all([
         getAllDriveFiles(),
-        getArtworks(),
+        getPosts(),
     ]);
-
     return {
         driveFiles,
-        artworks,
+        posts
     };
 }
 
