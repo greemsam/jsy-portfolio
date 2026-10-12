@@ -1,9 +1,3 @@
-export type ArtworkSize = {
-    width: number;
-    height: number;
-    unit: "mm" | "cm" | "px" | "inch";
-};
-
 export type ArtworkImage = {
     driveFileId: string;
     thumbnailPath: string;
@@ -18,7 +12,9 @@ export type Post = {
     title: string;
     description: string;
     medium: string;
-    size: ArtworkSize | null;
+    width:number;
+    height:number;
+    sizeUnit:string;
     tags: string[];
     images: ArtworkImage[];
     published: boolean;

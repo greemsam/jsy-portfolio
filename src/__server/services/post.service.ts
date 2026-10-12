@@ -91,7 +91,9 @@ export async function postArtworks(request: Request) {
 
         // 아직 등록 UI에서 입력받지 않는 값은 기본값으로 저장
         medium: "",
-        size: null,
+        width:"",
+        height:"",
+        sizeUnit:"",
         tags: [],
 
         // Storage 업로드까지 완료된 이미지 정보
@@ -127,7 +129,9 @@ export async function getPosts() {
             title: data.title ?? "",
             description: data.description ?? "",
             medium: data.medium ?? "",
-            size: data.size ?? null,
+            width:data.width ?? "",
+            height:data.height ?? "",
+            sizeUnit:data.sizeUnit ?? "",
             tags: data.tags ?? [],
             images: data.images ?? [],
             published: data.published ?? false,

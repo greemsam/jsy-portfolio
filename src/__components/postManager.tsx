@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAdminStore } from "@/__stores";
 import PostLists from "./postLists";
 import PostRegister from "./postRegister";
+import PostEdit from "./postEdit";
 import type { Post } from "@/__types/artwork";
 import type { DriveYearGroup } from "@/__types/drive";
 
@@ -16,24 +16,20 @@ type Props = {
 
 export default function PostManager({ initialData }: Props) {
     const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-    const setPosts = useAdminStore((state) => state.setPosts);
-    const setDriveFiles = useAdminStore((state) => state.setDriveFiles);
-
-    useEffect(() => {
-        setPosts(initialData.posts);
-        setDriveFiles(initialData.driveFiles);
-    }, [initialData, setPosts, setDriveFiles]);
+    const [posts, setPosts] = useState<Post[]>(initialData.posts);
+    const [editingPost, setEditingPost] = useState<Post | null>(null);
 
     return (
         <>
             <button onClick={() => setIsRegisterOpen(true)}>
                 작품 등록
             </button>
-            <PostLists />
+            <PostLists posts={posts} onEdit={setEditingPost}/>
             {isRegisterOpen && (
-                <PostRegister
-                    onClose={() => setIsRegisterOpen(false)}
-                />
+                <PostRegister driveFiles={initialData.driveFiles} onClose={() => setIsRegisterOpen(false)}/>
+            )}
+            {editingPost && (
+                <PostEdit post={editingPost} onClose={() => setEditingPost(null)}/>
             )}
         </>
     );

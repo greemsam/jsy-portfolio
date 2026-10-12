@@ -4,24 +4,28 @@ import { useAdminStore } from "@/__stores";
 import styles from '@/__cssModules/admin/postLists.module.css'
 import PostImage from "./postImage"
 import type { Post } from "@/__types/artwork";
-export default function PostLists() {
-    const posts = useAdminStore((state) => state.posts);
+
+type Props = {
+    posts:Post[]
+    onEdit: (post: Post) => void;
+};
+export default function PostLists({ posts, onEdit }:Props ) {
     const updateDate = (date:null|string) => !date ? '' : new Intl.DateTimeFormat('ko-KR').format(new Date(date))
-    const caption = (artwork:Post) =>{
-
+    const caption = (post:Post) =>{
+        const width = post.width || ''
+        const height = post.height || ''
+        const size = width !== '' && height !=='' ? `, ${width} X ${height}` : ''
+        return `${post.medium}${size}`
     }
-
     return (
         <div>
             {posts.map((post) => (
                 <div className={styles.postList} key={post.postId}>
                     <PostImage src={post.images[0].thumbnailUrl} alt={post.title} />
-                    <article>
+                    <article onClick={() => onEdit(post)}>
                         <h2 className={styles.imgTitle}>{post.title}</h2>
-                        <p>{post.description}</p>
-                        <div className={styles.updatedAt}>업로드 날짜: {updateDate(post.updatedAt)}</div>
-                        <span>재료: {post.medium}</span>
-                        <span>크기: {post.size?.width} X {post.size?.height}</span>
+                        <div className={styles.updatedAt}>{updateDate(post.updatedAt)}</div>
+                        <span>{caption(post)}</span>
                     </article>
                 </div>
             ))}
