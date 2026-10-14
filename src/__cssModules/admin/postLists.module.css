@@ -12,6 +12,14 @@
     flex-direction: column;
     gap:6px;
 }
+.postWrapper{
+    position: relative;
+}
+.deleteButton {
+    position: absolute;
+    right:10px; 
+    top:10px;
+}
 .imgTitle{
     font-weight:400;
     font-size:14px;

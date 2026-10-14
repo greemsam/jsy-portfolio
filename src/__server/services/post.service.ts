@@ -3,7 +3,7 @@ import sharp from "sharp";
 import { FieldValue } from "firebase-admin/firestore";
 import { getAllDriveFiles, downloadDriveFile } from "@/__server/lib/google-drive";
 import { uploadArtworkImage } from "@/__server/lib/firebase-storage";
-import { adminDb } from "@/__server/lib/firebase-admin";
+import { adminDb, adminStorage } from "@/__server/lib/firebase-admin";
 import type { DriveFile } from "@/__types/drive";
 
 type ArtworkRegisterRequest = {
@@ -113,6 +113,57 @@ export async function postArtworks(request: Request) {
     });
 }
 
+export async function deletePost(request:Request){
+    const { postId } = await request.json();
+    if (!postId) {
+        return Response.json({ success: false }, { status: 400 });
+    }
+    const postsRef = adminDb.collection("posts");
+    const postRef = postsRef.doc(postId);
+    const postDoc = await postRef.get();
+
+    if (!postDoc.exists) {
+        return Response.json(
+            { success: false, message: "게시물이 없습니다." },
+            { status: 404 }
+        );
+    }
+    const images = postDoc.data()?.images ?? [];
+
+     // 다른 게시물에서 사용 중인 이미지 경로 확인
+    const otherPosts = await postsRef.get();
+    const usedPaths = new Set<string>();
+    for (const doc of otherPosts.docs) {
+        if (doc.id === postId) continue;
+        for (const image of doc.data().images ?? []) {
+            if (image.thumbnailPath) usedPaths.add(image.thumbnailPath);
+            if (image.displayPath) usedPaths.add(image.displayPath);
+        }
+    }
+    const bucket = adminStorage.bucket();
+
+    // 다른 게시물이 사용하지 않는 파일만 삭제
+    const pathsToDelete = new Set<string>();
+
+    for (const image of images) {
+        if (image.thumbnailPath && !usedPaths.has(image.thumbnailPath)) {
+            pathsToDelete.add(image.thumbnailPath);
+        }
+
+        if (image.displayPath && !usedPaths.has(image.displayPath)) {
+            pathsToDelete.add(image.displayPath);
+        }
+    }
+    await Promise.all(
+        [...pathsToDelete].map((path) =>
+            bucket.file(path).delete({ ignoreNotFound: true })
+        )
+    );
+
+    // Firestore 게시물 삭제
+    await postRef.delete();
+    return Response.json({ success: true });
+}
 export async function getPosts() {
     // Firestore에서 등록된 전체 작품 조회
     const snapshot = await adminDb
@@ -153,4 +204,3 @@ export async function getAdminInitialData() {
         posts
     };
 }
-

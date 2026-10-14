@@ -6,17 +6,19 @@ import type { Post } from "@/__types/artwork";
 type Props = {
     post:Post
     onClose: () => void;
+    onUpdate: (updatedPost: Post) => void;
 };
-export default function postEdit({ post, onClose }: Props) {
+export default function postEdit({ post, onClose, onUpdate }: Props) {
     const [width, setWidth] = useState(post.width)
     const [height, setHeight] = useState(post.height)
-    const [sizeUnit, setSizeUnit] = useState(post.sizeUnit)
+    const [sizeUnit, setSizeUnit] = useState(post.sizeUnit || 'mm')
     const [medium, setMedium] = useState(post.medium)
     const [title, setTitle] = useState(post.title)
     const [description, setDescription] = useState(post.description)
-    const handleRegister = async () => {
+    const handleUpdate = async () => {
         // 서버에 전달할 작품 등록 데이터
         const params = {
+            postId:post.postId,
             width,
             height,
             sizeUnit,
@@ -25,8 +27,8 @@ export default function postEdit({ post, onClose }: Props) {
             medium,
         };
         
-        const response = await fetch("/api/posts", {
-            method: "POST",
+        const response = await fetch(`/api/posts`, {
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -34,8 +36,18 @@ export default function postEdit({ post, onClose }: Props) {
         });
 
         const result = await response.json();
-
-        console.log(result);
+        if(result.success){
+            onUpdate({
+                ...post,
+                width,
+                height,
+                sizeUnit,
+                title,
+                description,
+                medium,
+            })
+            onClose()
+        }
     };
     return (
         <div className={styles.postEditCover}>
@@ -71,7 +83,7 @@ export default function postEdit({ post, onClose }: Props) {
                         </select>
                     </li>
                 </ul>
-                <button className={styles.registerPost} type="button" onClick={handleRegister}>등록</button>
+                <button className={styles.registerPost} type="button" onClick={handleUpdate}>수정</button>
             </div>
         </div>
     );
