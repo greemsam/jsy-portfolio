@@ -3,6 +3,7 @@
 import styles from '@/__cssModules/admin/postLists.module.css'
 import PostImage from "./postImage"
 import type { Post } from "@/__types/artwork";
+import { useState } from "react";
 
 type Props = {
     posts:Post[]
@@ -10,6 +11,7 @@ type Props = {
     onDelete:(postId:string) => void
 };
 export default function PostLists({ posts, onEdit, onDelete }:Props ) {
+    const [isDeleteConfirmOpened, setIsDeleteConfirmOpened] = useState(false) 
     const updateDate = (date:null|string) => !date ? '' : new Intl.DateTimeFormat('ko-KR').format(new Date(date))
     const caption = (post:Post) =>{
         const width = post.width || ''
@@ -42,9 +44,14 @@ export default function PostLists({ posts, onEdit, onDelete }:Props ) {
                         </div>
                         <button className={styles.deleteButton} onClick={() => handleDelete(post.postId)}>삭제</button>
                     </article>
-                    
                 </div>
             ))}
+            {isDeleteConfirmOpened && 
+                <div>
+                    삭제하시겠습니까?
+                </div>
+            }
+            
         </div>
     );
 }
