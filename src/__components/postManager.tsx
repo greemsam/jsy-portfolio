@@ -22,8 +22,12 @@ export default function PostManager({ initialData }: Props) {
         const prevPosts = (prev:Post[]) => prev.map((post)=> post.postId === updatedPost.postId ? updatedPost : post)
         setPosts(prevPosts)
     }
-    const handlePostDelete = (postId: string) => {
-        setPosts((prev) =>
+    const handlePostDelete = (postId: string[]) => {
+        setPosts((prev) =>{
+            const nextArr = []
+            prev.forEach(postId => {
+                if(prev.postId !== postId)
+            })
             prev.filter((post) => post.postId !== postId)
         );
     };

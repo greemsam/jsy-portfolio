@@ -2,6 +2,7 @@
 
 import styles from '@/__cssModules/admin/postLists.module.css'
 import PostImage from "./postImage"
+import LayerPopup from './layerPopup'
 import type { Post } from "@/__types/artwork";
 import { useState } from "react";
 
@@ -12,6 +13,7 @@ type Props = {
 };
 export default function PostLists({ posts, onEdit, onDelete }:Props ) {
     const [isDeleteConfirmOpened, setIsDeleteConfirmOpened] = useState(false) 
+    const [selectedPopstIds, setSelectedPopstIds] = useState<string[]>([])
     const updateDate = (date:null|string) => !date ? '' : new Intl.DateTimeFormat('ko-KR').format(new Date(date))
     const caption = (post:Post) =>{
         const width = post.width || ''
@@ -19,7 +21,7 @@ export default function PostLists({ posts, onEdit, onDelete }:Props ) {
         const size = width !== '' && height !=='' ? `, ${width} X ${height}` : ''
         return `${post.medium}${size}`
     }
-    const handleDelete = async (postId:string) =>{
+    const handleDelete = async (postId:string[]) =>{
          const response = await fetch("/api/posts", {
             method: "DELETE",
             headers: {
@@ -42,16 +44,16 @@ export default function PostLists({ posts, onEdit, onDelete }:Props ) {
                             <div className={styles.updatedAt}>{updateDate(post.updatedAt)}</div>
                             <span>{caption(post)}</span>
                         </div>
-                        <button className={styles.deleteButton} onClick={() => handleDelete(post.postId)}>삭제</button>
+                        <button className={styles.deleteButton} onClick={() => setSelectedPopstIds([post.postId])}>삭제</button>
                     </article>
                 </div>
             ))}
             {isDeleteConfirmOpened && 
-                <div>
-                    삭제하시겠습니까?
-                </div>
+                <LayerPopup sentence="삭제 하시겠습니까?" 
+                    onClose={() => setIsDeleteConfirmOpened(false)}
+                    onAccept={() => handleDelete(selectedPopstIds)}
+                />
             }
-            
         </div>
     );
 }
