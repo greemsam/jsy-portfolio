@@ -1,11 +1,28 @@
-.postList{
+.postListWrapper{
     min-width:320px;
     width:100%;
-    max-width:400px;
+    max-width:760px;
+}
+.postListDelete{
+    padding:12px 12px;
+    display:flex;
+}
+.deleteSelected{
+    margin-left:auto;
+}
+.postList{
+    padding:0px 12px;
+    border-bottom:1px solid #ddd;
+
+}
+.postItem{
     display:flex;
     gap:8px;
+    padding:12px 0;
+    border-top:1px solid #ddd;
 }
-.postList article {
+
+.postItem article {
     width:calc(100% - 120px);
     height:100px;
     display:flex;

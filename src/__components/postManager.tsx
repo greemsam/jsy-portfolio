@@ -6,6 +6,7 @@ import PostRegister from "./postRegister";
 import PostEdit from "./postEdit";
 import type { Post } from "@/__types/artwork";
 import type { DriveYearGroup } from "@/__types/drive";
+import styles from '@/__cssModules/admin/postManager.module.css'
 
 type Props = {
     initialData: {
@@ -28,9 +29,14 @@ export default function PostManager({ initialData }: Props) {
     };
     return (
         <>
-            <button onClick={() => setIsRegisterOpen(true)}>
-                작품 등록
-            </button>
+            <div className={styles.postSearch}>
+                <input type="text" placeholder="작품검색" />
+                <button>검색</button>
+                <button onClick={() => setIsRegisterOpen(true)}>
+                    포스팅 작성
+                </button>
+            </div>
+
             <PostLists posts={posts} onEdit={setEditingPost} onDelete={handlePostDelete}/>
             {isRegisterOpen && (
                 <PostRegister driveFiles={initialData.driveFiles} onClose={() => setIsRegisterOpen(false)}/>

@@ -53,7 +53,7 @@ export default function postEdit({ post, onClose, onUpdate }: Props) {
         <div className={styles.postEditCover}>
             <div className={styles.postEditDialog}>
                 <div className={styles.postEditHeader}>
-                    <h2>작품 수정</h2>
+                    <h2>포스팅 수정</h2>
                     <button onClick={onClose}>닫기</button> 
                 </div>
                 <div className={styles.textInfo}>

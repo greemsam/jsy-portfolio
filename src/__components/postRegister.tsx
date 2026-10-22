@@ -55,7 +55,7 @@ export default function postRegister({ driveFiles, onClose }: Props) {
         <div className={styles.postRegisterCover}>
             <div className={styles.postRegisterDialog}>
                 <div className={styles.postRegisterHeader}>
-                    <h2>작품 등록</h2>
+                    <h2>포스팅 등록</h2>
                     <button onClick={onClose}>닫기</button> 
                 </div>
                 <div className={styles.textInfo}>

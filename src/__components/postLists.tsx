@@ -61,34 +61,38 @@ export default function PostLists({ posts, onEdit, onDelete }:Props ) {
         }
     }
     return (
-        <div>
-            <label>
-                <input type="checkbox" disabled={isDeleting || !posts.length}
-                    checked={posts.length > 0 && posts.every((post) => selectedPostIds.includes(post.postId))}
-                    onChange={(event) => setSelectedPostIds(event.target.checked ? posts.map((post) => post.postId) : [])} />
-                전체 선택
-            </label>
-            <button disabled={isDeleting || !selectedPostIds.length} onClick={() => confirmDelete(selectedPostIds)}>
-                선택 삭제 ({selectedPostIds.length})
-            </button>
+        <div className={styles.postListWrapper}>
+            <div className={styles.postListDelete}>
+                <label>
+                    <input type="checkbox" disabled={isDeleting || !posts.length}
+                        checked={posts.length > 0 && posts.every((post) => selectedPostIds.includes(post.postId))}
+                        onChange={(event) => setSelectedPostIds(event.target.checked ? posts.map((post) => post.postId) : [])} />
+                    전체 선택
+                </label>
+                <button className={styles.deleteSelected} disabled={isDeleting || !selectedPostIds.length} onClick={() => confirmDelete(selectedPostIds)}>
+                    선택 삭제 ({selectedPostIds.length})
+                </button>
+            </div>
             {error && <p role="alert">{error}</p>}
-            {posts.map((post) => (
-                <div className={styles.postList} key={post.postId}>
-                    <input type="checkbox" aria-label={`${post.title} 선택`} disabled={isDeleting}
-                        checked={selectedPostIds.includes(post.postId)}
-                        onChange={(event) => setSelectedPostIds((prev) => event.target.checked
-                            ? [...prev, post.postId] : prev.filter((id) => id !== post.postId))} />
-                    {post.images[0] && <PostImage src={post.images[0].thumbnailUrl} alt={post.title} />}
-                    <article className={styles.postWrapper}>
-                        <div className={styles.postInfo} onClick={() => onEdit(post)}>
-                            <h2 className={styles.imgTitle}>{post.title}</h2>
-                            <div className={styles.updatedAt}>{updateDate(post.updatedAt)}</div>
-                            <span>{caption(post)}</span>
-                        </div>
-                        <button className={styles.deleteButton} disabled={isDeleting} onClick={() => confirmDelete([post.postId])}>삭제</button>
-                    </article>
-                </div>
-            ))}
+            <ul className={styles.postList}>
+                {posts.map((post) => (
+                    <li className={styles.postItem} key={post.postId}>
+                        <input type="checkbox" aria-label={`${post.title} 선택`} disabled={isDeleting}
+                            checked={selectedPostIds.includes(post.postId)}
+                            onChange={(event) => setSelectedPostIds((prev) => event.target.checked
+                                ? [...prev, post.postId] : prev.filter((id) => id !== post.postId))} />
+                        {post.images[0] && <PostImage src={post.images[0].thumbnailUrl} alt={post.title} />}
+                        <article className={styles.postWrapper}>
+                            <div className={styles.postInfo} onClick={() => onEdit(post)}>
+                                <h2 className={styles.imgTitle}>{post.title}</h2>
+                                <div className={styles.updatedAt}>{updateDate(post.updatedAt)}</div>
+                                <span>{caption(post)}</span>
+                            </div>
+                            <button className={styles.deleteButton} disabled={isDeleting} onClick={() => confirmDelete([post.postId])}>삭제</button>
+                        </article>
+                    </li>
+                ))}
+            </ul>
             {isDeleteConfirmOpened && 
                 <LayerPopup sentence={`${pendingPostIds.length}개 작품을 삭제하시겠습니까?`}
                     title="작품 삭제" cancelButtonText="취소" acceptButtonText={isDeleting ? '삭제 중…' : '삭제'}
