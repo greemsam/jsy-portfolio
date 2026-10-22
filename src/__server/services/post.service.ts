@@ -114,55 +114,73 @@ export async function postArtworks(request: Request) {
 }
 
 export async function deletePost(request:Request){
-    const { postId } = await request.json();
-    if (!postId) {
-        return Response.json({ success: false }, { status: 400 });
+    let body;
+    try {
+        body = await request.json();
+    } catch {
+        return Response.json({ success: false, message: "잘못된 JSON 요청입니다." }, { status: 400 });
     }
-    const postsRef = adminDb.collection("posts");
-    const postRef = postsRef.doc(postId);
-    const postDoc = await postRef.get();
-
-    if (!postDoc.exists) {
-        return Response.json(
-            { success: false, message: "게시물이 없습니다." },
-            { status: 404 }
-        );
+    // 기존 단일 삭제 요청도 지원합니다.
+    const ids: unknown = body?.postIds ?? (body?.postId ? [body.postId] : []);
+    if (!Array.isArray(ids) || !ids.length || ids.length > 100 ||
+        ids.some((id) => typeof id !== "string" || !id.trim() || id.includes("/") ||
+            id === "." || id === ".." || /^__.*__$/.test(id) || Buffer.byteLength(id, "utf8") > 1500)) {
+        return Response.json({ success: false, message: "삭제할 게시물 ID를 1~100개 전달해 주세요." }, { status: 400 });
     }
-    const images = postDoc.data()?.images ?? [];
-
-     // 다른 게시물에서 사용 중인 이미지 경로 확인
-    const otherPosts = await postsRef.get();
-    const usedPaths = new Set<string>();
-    for (const doc of otherPosts.docs) {
-        if (doc.id === postId) continue;
-        for (const image of doc.data().images ?? []) {
-            if (image.thumbnailPath) usedPaths.add(image.thumbnailPath);
-            if (image.displayPath) usedPaths.add(image.displayPath);
+    const postIds = [...new Set(ids as string[])];
+    const selectedIds = new Set(postIds);
+    try {
+        const postsRef = adminDb.collection("posts");
+        // 선택한 게시물과 공유 이미지 참조를 한 번의 조회로 확인합니다.
+        const snapshot = await postsRef.select("images").get();
+        const selectedPosts = snapshot.docs.filter((doc) => selectedIds.has(doc.id));
+        const usedPaths = new Set<string>();
+        for (const doc of snapshot.docs) {
+            if (selectedIds.has(doc.id)) continue;
+            for (const image of doc.data().images ?? []) {
+                if (image.thumbnailPath) usedPaths.add(image.thumbnailPath);
+                if (image.displayPath) usedPaths.add(image.displayPath);
+            }
         }
-    }
-    const bucket = adminStorage.bucket();
+        const bucket = adminStorage.bucket();
 
-    // 다른 게시물이 사용하지 않는 파일만 삭제
-    const pathsToDelete = new Set<string>();
+        // 다른 게시물이 사용하지 않는 파일만 삭제
+        const pathsToDelete = new Set<string>();
 
-    for (const image of images) {
-        if (image.thumbnailPath && !usedPaths.has(image.thumbnailPath)) {
-            pathsToDelete.add(image.thumbnailPath);
+        for (const doc of selectedPosts) {
+          for (const image of doc.data().images ?? []) {
+            if (image.thumbnailPath && !usedPaths.has(image.thumbnailPath)) {
+                pathsToDelete.add(image.thumbnailPath);
+            }
+
+            if (image.displayPath && !usedPaths.has(image.displayPath)) {
+                pathsToDelete.add(image.displayPath);
+            }
+          }
+        }
+        // 이미지 데이터는 받지 않고 삭제 요청을 최대 5개씩 실행합니다.
+        const paths = [...pathsToDelete];
+        for (let i = 0; i < paths.length; i += 5) {
+            const results = await Promise.allSettled(paths.slice(i, i + 5).map((path) =>
+                bucket.file(path).delete({ ignoreNotFound: true })
+            ));
+            if (results.some((result) => result.status === "rejected")) {
+                throw new Error("Storage deletion failed");
+            }
         }
 
-        if (image.displayPath && !usedPaths.has(image.displayPath)) {
-            pathsToDelete.add(image.displayPath);
+        // Firestore 게시물 삭제
+        if (selectedPosts.length) {
+            const batch = adminDb.batch();
+            selectedPosts.forEach((doc) => batch.delete(doc.ref));
+            await batch.commit();
         }
+        // 이미 없는 ID도 성공 처리하여 동일 요청을 재시도할 수 있게 합니다.
+        return Response.json({ success: true, deletedPostIds: postIds });
+    } catch (error) {
+        console.error("게시물 삭제 실패:", error);
+        return Response.json({ success: false, message: "삭제를 완료하지 못했습니다. 일부 이미지는 삭제되었을 수 있으니 다시 시도해 주세요." }, { status: 500 });
     }
-    await Promise.all(
-        [...pathsToDelete].map((path) =>
-            bucket.file(path).delete({ ignoreNotFound: true })
-        )
-    );
-
-    // Firestore 게시물 삭제
-    await postRef.delete();
-    return Response.json({ success: true });
 }
 export async function getPosts() {
     // Firestore에서 등록된 전체 작품 조회

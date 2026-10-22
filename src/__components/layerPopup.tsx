@@ -8,6 +8,7 @@ type Props = {
     onClose: () => void
     onCancel?: () => void
     onAccept?: () => void
+    disabled?: boolean
 };
 const defaultProps:Props = {
     title:'알림',
@@ -22,17 +23,18 @@ export default function layerPopup({
     acceptButtonText,
     onClose, 
     onCancel,
-    onAccept 
+    onAccept,
+    disabled = false
 }:Props = defaultProps ) {
     return (
         <div>
-            <img src="" alt="close" onClick={onClose}/>
+            <button type="button" aria-label="닫기" disabled={disabled} onClick={onClose}>닫기</button>
             <h1>{title}</h1>
             <p>{sentence}</p>
             {cancelButtonText && 
-                <button onClick={onCancel}>{cancelButtonText}</button>
+                <button disabled={disabled} onClick={onCancel ?? onClose}>{cancelButtonText}</button>
             }
-            <button onClick={onAccept ? onAccept : onClose}>{acceptButtonText}</button>        
+            <button disabled={disabled} onClick={onAccept ? onAccept : onClose}>{acceptButtonText}</button>
         </div>
     )
 }
