@@ -9,10 +9,10 @@ export default function ImageWithDivFallback({ src, alt }:{src:string, alt:strin
     // 에러 발생 시 상태를 true로 변경하여 리렌더링 유도
     const handleError = () => setIsError(true);
 
-    if (isError) {
+    if (!src || isError) {
         return (
             <div className={`${styles.postThumbnailWrapper} ${styles.noImg}`}>
-                이미지 준비 중
+                이미지<br/>준비 중
             </div>
         );
     }
@@ -23,6 +23,11 @@ export default function ImageWithDivFallback({ src, alt }:{src:string, alt:strin
                 className={styles.postThumbnail}
                 src={src}
                 alt={alt}
+                ref={(image) => {
+                    if (image?.complete && image.naturalWidth === 0) {
+                        handleError();
+                    }
+                }}
                 onError={handleError}
             />
         </div>

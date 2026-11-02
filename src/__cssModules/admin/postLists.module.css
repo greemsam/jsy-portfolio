@@ -1,14 +1,51 @@
-.postListWrapper{
-    min-width:320px;
-    width:100%;
-    max-width:760px;
-}
+
 .postListDelete{
     padding:12px 12px;
     display:flex;
+    align-items:center;
+}
+.allLists {
+    position:absolute;
+    opacity:0;
+    width:1px;
+    height:1px;
+}
+.allLists + .deleteSelectAll{
+    display:block;
+    width:18px;
+    height:18px;
+    border-radius:4px;
+    text-align: center;
+    overflow: hidden;
+    margin-right:10px;
+    background:#ddd;
+    cursor:pointer;
+}
+.allLists:checked + .deleteSelectAll{
+    background:#15a1b9;
+}
+.allLists + .deleteSelectAll span{
+    font-size:14px;
+    transform: translateY(-2px);
+    color:#fff;
+}
+.allLists:checked + .deleteSelectAll span{
+    color:#fff;
+}
+.deleteSelectAllText{
+    font-size:14px;
+    color:#666;
 }
 .deleteSelected{
     margin-left:auto;
+    padding:4px 6px;
+    border:none;
+    font-size:12px;
+    border-radius:6px;
+}
+.deleteActive{
+    background:#d62424;
+    color:#fff;
 }
 .postList{
     padding:0px 12px;
@@ -17,25 +54,66 @@
 }
 .postItem{
     display:flex;
-    gap:8px;
     padding:12px 0;
     border-top:1px solid #ddd;
+    align-items: center;
 }
-
+.postCheck {
+    position:absolute;
+    opacity:0;
+    width:1px;
+    height:1px;
+}
+.postCheck + label{
+    display:block;
+    width:18px;
+    height:18px;
+    border-radius:4px;
+    text-align: center;
+    overflow: hidden;
+    margin-right:10px;
+    background:#ddd;
+    cursor:pointer;
+}
+.postCheck + label span{
+    font-size:14px;
+    transform: translateY(-2px);
+    color:#fff;
+}
+.postCheck:checked + label {
+    background:#15a1b9;
+}
+.postCheck:checked + label span{
+    color:#fff;
+}
 .postItem article {
     width:calc(100% - 120px);
     height:100px;
     display:flex;
     flex-direction: column;
     gap:6px;
+    margin-left:10px;
 }
 .postWrapper{
     position: relative;
 }
+.postInfo{
+    width:calc(100% - 60px);
+    text-align:left;
+    border:0;
+    background:transparent;
+    color:inherit;
+    cursor:pointer;
+}
 .deleteButton {
     position: absolute;
-    right:10px; 
-    top:10px;
+    right:0px;
+    border:none;
+    background:none;
+    color:#d62424;
+}
+.deleteButton span{
+    font-size:20px;
 }
 .imgTitle{
     font-weight:400;
@@ -50,4 +128,27 @@
 }
 .postList .updatedAt{
     font-size:12px;
+    color:#666;
+    margin-top:10px;
 }
+.postList .caption{
+    font-size:12px;
+}
+.postListWrapper { color:#253238; background:#fff; }
+.allLists:focus-visible + label, .postCheck:focus-visible + label { outline:2px solid #15a1b9; outline-offset:3px; }
+.allLists:disabled + label, .postCheck:disabled + label { opacity:.45; cursor:not-allowed; }
+.allLists + .deleteSelectAll, .postCheck + label { flex-shrink:0; }
+.deleteSelected { min-height:32px; cursor:pointer; }
+.deleteSelected:disabled { background:#f1f3f4; color:#9aa4a9; cursor:not-allowed; }
+.deleteButton { padding:6px; border-radius:6px; cursor:pointer; }
+.deleteButton:hover { background:#fff0f0; }
+.deleteButton:disabled { opacity:.4; cursor:wait; }
+.postItem article { flex:1; min-width:0; width:auto; }
+.postInfo { width:calc(100% - 36px); }
+.postInfo:hover .imgTitle { color:#15a1b9; }
+.imgTitle { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; }
+.updatedAt i { font-style:normal; }
+.caption { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; color:#66747b; }
+.error { padding:12px; color:#d62424; background:#fff0f0; font-size:14px; }
+.empty { padding:56px 20px; text-align:center; color:#78868c; font-size:14px; }
+.postListWrapper button:focus-visible { outline:2px solid #15a1b9; outline-offset:2px; }

@@ -1,0 +1,16 @@
+.adminHeader{
+    width:100%;
+    padding:18px 12px;
+    background:#fff;
+    color:#253238;
+    border-bottom:1px solid #e7edef;
+}
+.adminHeaderInner{
+    min-width:320px;
+    width:100%;
+    max-width:760px;
+    margin:0 auto;
+}
+.adminHeaderInner h1{
+    font-size:16px;
+}
