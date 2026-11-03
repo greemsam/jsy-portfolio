@@ -10,7 +10,7 @@ type UploadArtworkImageParams = {
 
 export async function getArtworkImageUrl(path?: string) {
     // Storage에 저장된 이미지 파일 객체
-    if(!path) return ''
+    if (!path) return "";
     const file = adminStorage.bucket().file(path);
 
     // 이미지에 접근할 수 있는 서명된 URL 생성
@@ -18,7 +18,6 @@ export async function getArtworkImageUrl(path?: string) {
         action: "read",
         expires: Date.now() + 60 * 60 * 1000,
     });
-
 
     return url;
 }
@@ -65,7 +64,8 @@ export async function uploadArtworkImage({
         }),
     ]);
     const bucketName = bucket.name;
-    const makeUrl = (path: string, token: string) => `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(path)}?alt=media&token=${token}`;
+    const makeUrl = (path: string, token: string) =>
+        `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(path)}?alt=media&token=${token}`;
     return {
         thumbnailPath,
         displayPath,

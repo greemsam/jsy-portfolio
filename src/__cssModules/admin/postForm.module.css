@@ -1,30 +1,446 @@
-.postRegisterCover, .postEditCover { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; background: #17252b66; }
-.postRegisterDialog, .postEditDialog { width: 100%; max-width: 480px; max-height: calc(100dvh - 40px); overflow-y: auto; background: #fff; color: #253238; padding: 24px; border-radius: 12px; box-shadow: 0 20px 70px #152b3426; }
-.postRegisterHeader, .postEditHeader { display: flex; align-items: center; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid #e7edef; }
-.postRegisterHeader h2, .postEditHeader h2 { font-size: 20px; }
-.postRegisterHeader button, .postEditHeader button { margin-left: auto; padding: 6px 12px; border: 1px solid #d62424; border-radius: 6px; background: #fff; color: #d62424; cursor: pointer; }
-.textInfo { margin-top: 20px; }
-.textInfo br { display: none; }
-.postRegisterDialog input:not([type=checkbox]), .postEditDialog input:not([type=checkbox]), .textInfo textarea, .postRegisterDialog select, .postEditDialog select { width: 100%; min-width: 0; border: 1px solid #d8e1e5; border-radius: 6px; padding: 10px 12px; background: #fff; color: #253238; font-size: 14px; }
-.textInfo textarea { display: block; min-height: 140px; margin-top: 12px; resize: vertical; }
-.postRegisterDialog input:focus, .postEditDialog input:focus, .textInfo textarea:focus, .postRegisterDialog select:focus, .postEditDialog select:focus { outline: 2px solid #15a1b9; outline-offset: 2px; }
-.imgSelection { margin-top: 20px; padding: 16px; background: #f7f9fa; border-radius: 8px; }
-.yearSelector { max-width: 130px; }
-.fileList { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; max-height: 180px; overflow-y: auto; }
-.fileList > div { position: relative; }
-.fileList label { display: block; padding: 10px; border: 1px solid #d8e1e5; border-radius: 6px; background: #fff; color: #66747b; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
-.fileCheckbox { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.fileCheckbox:checked + label { border-color: #15a1b9; color: #15a1b9; background: #edf9fb; font-weight: 600; }
-.fileCheckbox:focus-visible + label { outline: 2px solid #15a1b9; outline-offset: -2px; }
-.postEditMedium { margin-top: 20px; }
-.postEditSize { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-.postEditSize select { flex: 0 0 76px; }
-.registerPost { display: block; width: 100%; min-height: 44px; margin-top: 24px; border: 0; border-radius: 6px; background: #15a1b9; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
-.registerPost:hover { filter: brightness(.94); }
-.registerPost:focus-visible { outline: 2px solid #15a1b9; outline-offset: 3px; }
-.registerPost:disabled { opacity: .45; cursor: wait; }
-.success, .error { margin-top:16px; padding:12px; border-radius:6px; font-size:13px; line-height:1.6; }
-.success { background:#edf9fb; color:#15a1b9; }
-.error { background:#fff0f0; color:#d62424; }
-.postRegisterHeader button:disabled, .postEditHeader button:disabled { opacity:.45; cursor:wait; }
-@media (max-width: 480px) { .postRegisterCover, .postEditCover { padding: 12px; } .postRegisterDialog, .postEditDialog { padding: 20px; max-height: calc(100dvh - 24px); } .fileList { grid-template-columns: minmax(0, 1fr); } }
+.postRegisterCover,
+.postEditCover {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #17252b66;
+}
+.postRegisterDialog,
+.postEditDialog {
+    width: 100%;
+    max-width: 480px;
+    max-height: calc(100dvh - 40px);
+    overflow-y: auto;
+    background: #fff;
+    color: #253238;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 20px 70px #152b3426;
+}
+.postRegisterDialog,
+.postEditDialog {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.postRegisterHeader,
+.postEditHeader,
+.registerFooter {
+    flex-shrink: 0;
+}
+.registerBody {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    padding: 0 4px 32px;
+    scrollbar-gutter: stable;
+}
+.registerFooter {
+    padding-top: 16px;
+    border-top: 1px solid #e7edef;
+}
+.registerFooter .registerPost {
+    margin-top: 0;
+}
+.postRegisterHeader,
+.postEditHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e7edef;
+}
+.postRegisterHeader h2,
+.postEditHeader h2 {
+    font-size: 20px;
+}
+.postRegisterHeader button,
+.postEditHeader button {
+    margin-left: auto;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #fff;
+    color: #aaa;
+    cursor: pointer;
+}
+.textInfo {
+    margin-top: 20px;
+}
+.textInfo br {
+    display: none;
+}
+.postRegisterDialog input[type="text"],
+.postEditDialog input[type="text"],
+.textInfo textarea,
+.postRegisterDialog select,
+.postEditDialog select {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #d8e1e5;
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: #fff;
+    color: #253238;
+    font-size: 14px;
+}
+.textInfo textarea {
+    display: block;
+    min-height: 140px;
+    margin-top: 12px;
+    resize: vertical;
+}
+.postRegisterDialog input[type="text"]:focus,
+.postEditDialog input[type="text"]:focus,
+.textInfo textarea:focus,
+.postRegisterDialog select:focus,
+.postEditDialog select:focus {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+}
+.yearSelection {
+    margin-top: 16px;
+}
+.imgSelection {
+    margin-top: 12px;
+}
+.postRegisterDialog .yearSelector {
+    width: 120px;
+    height: 30px;
+    padding: 0 4px;
+    font-size: 12px;
+}
+.registerFields {
+    border: 0;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+}
+.publishCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.postRegisterHeader h2,
+.postEditHeader h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.postRegisterHeader h2 > span,
+.postEditHeader h2 > span {
+    font-size: 30px;
+}
+.publishCheckbox input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+.publishCheckIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: #ddd;
+    color: #fff;
+}
+.publishCheckIcon span {
+    font-size: 14px;
+    line-height: 1;
+}
+.publishCheckbox input:checked + .publishCheckIcon {
+    background: #000;
+}
+.publishCheckbox input:focus-visible + .publishCheckIcon {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+}
+.publishOptions {
+    display: flex;
+    width: fit-content;
+    min-width: 0;
+    max-width: 100%;
+    align-items: center;
+    gap: 20px;
+    border: 0;
+    margin: 16px 0 12px;
+    padding: 0;
+}
+.publishOptions legend {
+    font-size: 13px;
+    color: #66747b;
+    margin-bottom: 8px;
+}
+.publishOptions label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 18px;
+    color: #ccc;
+    cursor: pointer;
+}
+.publishOptions label:has(input:checked) {
+    color: #000;
+}
+.publishOptions label:has(input:disabled),
+.publishOptions label:has(input:disabled) > span {
+    color: #ccc;
+}
+.publishStatusLabel {
+    font-size: 14px;
+}
+.publishOptions label > span {
+    display: block;
+    font-size: 18px;
+    line-height: 18px;
+}
+.postEditDialog .publishOptions input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+.publishOptions label > span {
+    color: #ccc;
+}
+.publishOptions input:checked + span {
+    color: #000;
+}
+.publishOptions input:focus-visible + span {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+}
+.publishOptions:disabled label,
+.publishCheckbox:has(input:disabled) {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+.registerFields:disabled input,
+.registerFields:disabled textarea,
+.registerFields:disabled select {
+    background: #f1f3f4;
+    color: #98a2a8;
+    cursor: not-allowed;
+}
+.fileCheckbox:disabled + label {
+    cursor: wait;
+}
+.loadingStatus {
+    display: inline-flex;
+    color: #000;
+}
+.loadingIcon {
+    font-size: 20px;
+    animation: hourglassSpin 1.2s linear infinite;
+}
+@keyframes hourglassSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.fileList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.fileList > div {
+    position: relative;
+    min-width: 0;
+}
+.fileList label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    padding: 6px 0;
+    cursor: pointer;
+}
+.fileName {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    color: #66747b;
+}
+.fileCheckbox:checked + label .fileName {
+    color: #000;
+}
+.fileCheckbox {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+.fileImage {
+    display: block;
+    width: 100%;
+    height: 240px;
+    object-fit: contain;
+    background: #f1f3f4;
+    border-radius: 4px;
+}
+.fileFallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #e5e7e9;
+    color: #879198;
+}
+.fileFallback > span {
+    font-size: 28px;
+}
+.fileCheck {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: #b2b9be;
+    color: #fff;
+}
+.fileCheck > span {
+    font-size: 12px;
+    line-height: 1;
+}
+.fileCheckbox:checked + label .fileCheck {
+    background: #000;
+    color: #fff;
+}
+.artworkPreview {
+    width: 100%;
+    margin: 12px 0;
+    padding: 12px;
+    border: 1px solid #e7edef;
+    border-radius: 4px;
+}
+.artworkPreview + .registerFields .textInfo {
+    margin-top: 0;
+}
+.previewItem + .previewItem {
+    margin-top: 12px;
+}
+.previewItem .fileFallback {
+    height: 240px;
+    border-radius: 4px;
+}
+.previewItem figcaption {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #66747b;
+    overflow-wrap: anywhere;
+}
+.selectionEmpty {
+    padding: 16px 0;
+    text-align: center;
+    color: #879198;
+    font-size: 13px;
+}
+.postRegisterHeader .closeIcon,
+.postEditHeader .closeIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+.closeIcon:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+}
+.fileCheckbox:focus-visible + label {
+    outline: 2px solid #000;
+    outline-offset: -2px;
+}
+.postEditMedium {
+    margin-top: 20px;
+}
+.postEditSize {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+.postEditSize select {
+    flex: 0 0 76px;
+}
+.registerPost {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 24px;
+    border: 0;
+    border-radius: 6px;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.registerPost:hover {
+    filter: brightness(0.94);
+}
+.registerPost:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+}
+.registerPost:disabled {
+    opacity: 0.45;
+    cursor: wait;
+}
+.success,
+.error {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.success {
+    background: #000;
+    color: #fff;
+}
+.error {
+    background: #fff0f0;
+    color: #d62424;
+}
+.postRegisterHeader button:disabled,
+.postEditHeader button:disabled {
+    opacity: 0.45;
+    cursor: wait;
+}
+@media (max-width: 480px) {
+    .postRegisterCover,
+    .postEditCover {
+        padding: 12px;
+    }
+    .postRegisterDialog,
+    .postEditDialog {
+        padding: 20px;
+        max-height: calc(100dvh - 24px);
+    }
+}

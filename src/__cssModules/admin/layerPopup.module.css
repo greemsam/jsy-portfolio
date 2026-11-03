@@ -1,12 +1,71 @@
-.cover { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 20px; background: #17252b66; }
-.dialog { position: relative; width: 100%; max-width: 380px; padding: 28px; border-radius: 12px; background: #fff; color: #253238; box-shadow: 0 20px 70px #152b3426; }
-.dialog h1 { font-size: 19px; margin-bottom: 12px; }
-.dialog p { font-size: 14px; line-height: 1.7; color: #66747b; }
-.close { position: absolute; right: 16px; top: 12px; background: transparent; border: 0; color: #66747b; cursor: pointer; }
-.actions { display: flex; gap: 10px; margin-top: 28px; }
-.actions button { flex: 1; min-height: 42px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-.cancel { background: #fff; color: #d62424; border: 1px solid #d62424; }
-.accept { background: #15a1b9; color: #fff; border: 1px solid #15a1b9; }
-.danger { background: #d62424; border-color: #d62424; }
-.dialog button:disabled { opacity: .45; cursor: wait; }
-.dialog button:focus-visible { outline: 2px solid #15a1b9; outline-offset: 3px; }
+.cover {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: #17252b66;
+}
+.dialog {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #fff;
+    color: #253238;
+    box-shadow: 0 20px 70px #152b3426;
+}
+.dialog h1 {
+    font-size: 19px;
+    margin-bottom: 12px;
+}
+.dialog p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #66747b;
+}
+.close {
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    background: transparent;
+    border: 0;
+    color: #66747b;
+    cursor: pointer;
+}
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+}
+.actions button {
+    flex: 1;
+    min-height: 42px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.cancel {
+    background: #fff;
+    color: #aaa;
+    border: 1px solid #aaa;
+}
+.accept {
+    background: #000;
+    color: #fff;
+    border: 1px solid #000;
+}
+.danger {
+    background: #d62424;
+    border-color: #d62424;
+}
+.dialog button:disabled {
+    opacity: 0.45;
+    cursor: wait;
+}
+.dialog button:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+}

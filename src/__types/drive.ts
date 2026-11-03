@@ -6,7 +6,8 @@ export type DriveFile = {
     thumbnailLink: string;
 };
 
-export type DriveYearGroup = { //DriveYearGroup
+export type DriveYearGroup = {
+    //DriveYearGroup
     year: string;
     files: DriveFile[];
 };

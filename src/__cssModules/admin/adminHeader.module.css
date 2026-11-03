@@ -1,16 +1,27 @@
-.adminHeader{
-    width:100%;
-    padding:18px 12px;
-    background:#fff;
-    color:#253238;
-    border-bottom:1px solid #e7edef;
+.adminHeader {
+    width: 100%;
+    padding: 18px 12px;
+    background: #fff;
+    color: #253238;
+    border-bottom: 1px solid #e7edef;
 }
-.adminHeaderInner{
-    min-width:320px;
-    width:100%;
-    max-width:760px;
-    margin:0 auto;
+.adminHeaderInner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 320px;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
 }
-.adminHeaderInner h1{
-    font-size:16px;
+.adminHeaderInner button {
+    border: 0;
+    background: transparent;
+    color: #777;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 6px;
+}
+.adminHeaderInner h1 {
+    font-size: 16px;
 }

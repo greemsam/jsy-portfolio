@@ -1,9 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import styles from "@/__cssModules/admin/postImage.module.css";
 
-export default function ImageWithDivFallback({ src, alt }:{src:string, alt:string}) {
+export default function ImageWithDivFallback({
+    src,
+    alt,
+}: {
+    src: string;
+    alt: string;
+}) {
     const [isError, setIsError] = useState(false);
 
     // 에러 발생 시 상태를 true로 변경하여 리렌더링 유도
@@ -12,7 +18,9 @@ export default function ImageWithDivFallback({ src, alt }:{src:string, alt:strin
     if (!src || isError) {
         return (
             <div className={`${styles.postThumbnailWrapper} ${styles.noImg}`}>
-                이미지<br/>준비 중
+                이미지
+                <br />
+                준비 중
             </div>
         );
     }
@@ -31,6 +39,5 @@ export default function ImageWithDivFallback({ src, alt }:{src:string, alt:strin
                 onError={handleError}
             />
         </div>
-
     );
 }

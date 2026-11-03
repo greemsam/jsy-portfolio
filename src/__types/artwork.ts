@@ -2,8 +2,8 @@ export type ArtworkImage = {
     driveFileId: string;
     thumbnailPath: string;
     displayPath: string;
-    thumbnailUrl:string
-    displayUrl:string
+    thumbnailUrl: string;
+    displayUrl: string;
 };
 
 export type Post = {
@@ -12,9 +12,9 @@ export type Post = {
     title: string;
     description: string;
     medium: string;
-    width:number;
-    height:number;
-    sizeUnit:string;
+    width: number;
+    height: number;
+    sizeUnit: string;
     tags: string[];
     images: ArtworkImage[];
     published: boolean;

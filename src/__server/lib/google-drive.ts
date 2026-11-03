@@ -23,7 +23,7 @@ export async function getPortfolioYears() {
     const files = await getDriveFiles(portfolioFolderId);
 
     return files.filter(
-        (file) => file.mimeType === "application/vnd.google-apps.folder"
+        (file) => file.mimeType === "application/vnd.google-apps.folder",
     );
 }
 
@@ -45,7 +45,7 @@ export async function getAllDriveFiles() {
                 year: year.name ?? "",
                 files,
             };
-        })
+        }),
     );
 }
 
@@ -65,7 +65,10 @@ export async function getDriveFiles(folderId: string): Promise<DriveFile[]> {
     }));
 }
 
-export async function downloadDriveFile(fileId: string): Promise<Buffer> {
+export async function downloadDriveFile(
+    fileId: string,
+    signal?: AbortSignal,
+): Promise<Buffer> {
     const response = await drive.files.get(
         {
             fileId,
@@ -73,8 +76,31 @@ export async function downloadDriveFile(fileId: string): Promise<Buffer> {
         },
         {
             responseType: "arraybuffer",
-        }
+            signal,
+        },
     );
 
     return Buffer.from(response.data as ArrayBuffer);
+}
+
+export async function downloadDrivePreview(
+    file: DriveFile,
+    signal?: AbortSignal,
+): Promise<Buffer> {
+    signal?.throwIfAborted();
+    if (file.thumbnailLink) {
+        try {
+            const client = await auth.getClient();
+            const response = await client.request<ArrayBuffer>({
+                url: file.thumbnailLink,
+                responseType: "arraybuffer",
+                signal,
+            });
+            return Buffer.from(response.data);
+        } catch {
+            signal?.throwIfAborted();
+            // Thumbnail links expire; fall back to the authenticated original.
+        }
+    }
+    return downloadDriveFile(file.id, signal);
 }

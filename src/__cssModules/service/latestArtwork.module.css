@@ -1,0 +1,35 @@
+.gallery {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #cdd6ce;
+}
+.artwork {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+    max-height: 700px;
+}
+.image {
+    display: block;
+    transform: scale(0.7);
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border: 3px solid #e7e4db;
+    box-shadow:
+        0 1px 2px #0005,
+        3px 7px 8px #18251b33,
+        12px 24px 32px #18251b26;
+}
+.empty {
+    font-size: 14px;
+    color: #46534b;
+}

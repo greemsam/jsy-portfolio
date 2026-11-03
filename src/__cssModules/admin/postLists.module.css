@@ -1,154 +1,324 @@
-
-.postListDelete{
-    padding:12px 12px;
-    display:flex;
-    align-items:center;
+.postListDelete {
+    padding: 12px 12px;
+    display: flex;
+    align-items: center;
 }
 .allLists {
-    position:absolute;
-    opacity:0;
-    width:1px;
-    height:1px;
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
 }
-.allLists + .deleteSelectAll{
-    display:block;
-    width:18px;
-    height:18px;
-    border-radius:4px;
+.allLists + .deleteSelectAll {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
     text-align: center;
     overflow: hidden;
-    margin-right:10px;
-    background:#ddd;
-    cursor:pointer;
+    margin-right: 10px;
+    background: #ddd;
+    cursor: pointer;
 }
-.allLists:checked + .deleteSelectAll{
-    background:#15a1b9;
+.allLists:checked + .deleteSelectAll {
+    background: #000;
 }
-.allLists + .deleteSelectAll span{
-    font-size:14px;
+.allLists + .deleteSelectAll span {
+    font-size: 14px;
     transform: translateY(-2px);
-    color:#fff;
+    color: #fff;
 }
-.allLists:checked + .deleteSelectAll span{
-    color:#fff;
+.allLists:checked + .deleteSelectAll span {
+    color: #fff;
 }
-.deleteSelectAllText{
-    font-size:14px;
-    color:#666;
+.deleteSelectAllText {
+    font-size: 14px;
+    color: #666;
 }
-.deleteSelected{
-    margin-left:auto;
-    padding:4px 6px;
-    border:none;
-    font-size:12px;
-    border-radius:6px;
+.deleteSelected {
+    margin-left: auto;
+    padding: 4px 6px;
+    border: none;
+    font-size: 12px;
+    border-radius: 0;
 }
-.deleteActive{
-    background:#d62424;
-    color:#fff;
+.deleteActive {
+    background: transparent;
+    color: #000;
 }
-.postList{
-    padding:0px 12px;
-    border-bottom:1px solid #ddd;
-
+.postList {
+    padding: 0px 12px;
+    border-bottom: 1px solid #ddd;
 }
-.postItem{
-    display:flex;
-    padding:12px 0;
-    border-top:1px solid #ddd;
+.postItem {
+    display: flex;
+    padding: 12px 0;
+    border-top: 1px solid #ddd;
     align-items: center;
 }
 .postCheck {
-    position:absolute;
-    opacity:0;
-    width:1px;
-    height:1px;
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
 }
-.postCheck + label{
-    display:block;
-    width:18px;
-    height:18px;
-    border-radius:4px;
+.postCheck + label {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
     text-align: center;
     overflow: hidden;
-    margin-right:10px;
-    background:#ddd;
-    cursor:pointer;
+    margin-right: 10px;
+    background: #ddd;
+    cursor: pointer;
 }
-.postCheck + label span{
-    font-size:14px;
+.postCheck + label span {
+    font-size: 14px;
     transform: translateY(-2px);
-    color:#fff;
+    color: #fff;
 }
 .postCheck:checked + label {
-    background:#15a1b9;
+    background: #000;
 }
-.postCheck:checked + label span{
-    color:#fff;
+.postCheck:checked + label span {
+    color: #fff;
 }
 .postItem article {
-    width:calc(100% - 120px);
-    height:100px;
-    display:flex;
+    width: calc(100% - 120px);
+    height: 100px;
+    display: flex;
     flex-direction: column;
-    gap:6px;
-    margin-left:10px;
+    gap: 6px;
+    margin-left: 10px;
 }
-.postWrapper{
+.postWrapper {
     position: relative;
 }
-.postInfo{
-    width:calc(100% - 60px);
-    text-align:left;
-    border:0;
-    background:transparent;
-    color:inherit;
-    cursor:pointer;
+.thumbnailButton {
+    display: block;
+    flex-shrink: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+}
+.postInfo {
+    width: calc(100% - 60px);
+    text-align: left;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
 }
 .deleteButton {
     position: absolute;
-    right:0px;
-    border:none;
-    background:none;
-    color:#d62424;
+    right: 0px;
+    border: none;
+    background: none;
+    color: #aaa;
 }
-.deleteButton span{
-    font-size:20px;
+.deleteButton span {
+    font-size: 20px;
 }
-.imgTitle{
-    font-weight:400;
-    font-size:14px;
-}
-.postList p{
-    color:#888;
-    font-size:14px;
+.imgTitle {
     font-weight: 400;
-    height:40px;
-    overflow:hidden;
+    font-size: 14px;
 }
-.postList .updatedAt{
-    font-size:12px;
-    color:#666;
-    margin-top:10px;
+.postList p {
+    color: #888;
+    font-size: 14px;
+    font-weight: 400;
+    height: 40px;
+    overflow: hidden;
 }
-.postList .caption{
-    font-size:12px;
+.postList .updatedAt {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
 }
-.postListWrapper { color:#253238; background:#fff; }
-.allLists:focus-visible + label, .postCheck:focus-visible + label { outline:2px solid #15a1b9; outline-offset:3px; }
-.allLists:disabled + label, .postCheck:disabled + label { opacity:.45; cursor:not-allowed; }
-.allLists + .deleteSelectAll, .postCheck + label { flex-shrink:0; }
-.deleteSelected { min-height:32px; cursor:pointer; }
-.deleteSelected:disabled { background:#f1f3f4; color:#9aa4a9; cursor:not-allowed; }
-.deleteButton { padding:6px; border-radius:6px; cursor:pointer; }
-.deleteButton:hover { background:#fff0f0; }
-.deleteButton:disabled { opacity:.4; cursor:wait; }
-.postItem article { flex:1; min-width:0; width:auto; }
-.postInfo { width:calc(100% - 36px); }
-.postInfo:hover .imgTitle { color:#15a1b9; }
-.imgTitle { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; }
-.updatedAt i { font-style:normal; }
-.caption { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; color:#66747b; }
-.error { padding:12px; color:#d62424; background:#fff0f0; font-size:14px; }
-.empty { padding:56px 20px; text-align:center; color:#78868c; font-size:14px; }
-.postListWrapper button:focus-visible { outline:2px solid #15a1b9; outline-offset:2px; }
+.postList .caption {
+    font-size: 12px;
+}
+.postListWrapper {
+    color: #253238;
+    background: #fff;
+}
+.allLists:focus-visible + label,
+.postCheck:focus-visible + label {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+}
+.allLists:disabled + label,
+.postCheck:disabled + label {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+.allLists + .deleteSelectAll,
+.postCheck + label {
+    flex-shrink: 0;
+}
+.deleteSelected {
+    min-height: 32px;
+    cursor: pointer;
+}
+.deleteSelected:disabled {
+    background: transparent;
+    color: #aaa;
+    cursor: not-allowed;
+}
+.deleteButton {
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.deleteButton:disabled {
+    opacity: 0.4;
+    cursor: wait;
+}
+.postItem article {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+}
+.postInfo {
+    width: calc(100% - 68px);
+}
+.deleteSelected,
+.publishSelected {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    line-height: 1;
+}
+.deleteSelected span,
+.publishSelected span {
+    display: block;
+    font-size: 16px;
+    line-height: 1;
+}
+.selectionActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+.selectionActions .deleteSelected {
+    margin-left: 0;
+}
+.selectionActions .actionText {
+    font-size: inherit;
+}
+@media (max-width: 768px) {
+    .selectionActions {
+        margin-left: auto;
+    }
+    .selectionActions .actionText {
+        display: none;
+    }
+    .selectionActions button {
+        white-space: nowrap;
+    }
+}
+.publishSelected {
+    min-height: 32px;
+    padding: 4px 8px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    color: #000;
+    font-size: 12px;
+    cursor: pointer;
+}
+.publishSelected:disabled {
+    background: transparent;
+    color: #aaa;
+    cursor: not-allowed;
+}
+.selectionActions button {
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 4px;
+    background: #f3f3f3;
+    color: #000;
+    transition:
+        background-color 0.15s,
+        color 0.15s;
+}
+.selectionActions button:hover:not(:disabled) {
+    background: #e5e5e5;
+}
+.selectionActions .publishSelected:hover:not(:disabled) {
+    background: #000;
+    color: #fff;
+}
+.selectionActions .deleteSelected:hover:not(:disabled) {
+    background: #fff0f0;
+    color: #d62424;
+}
+.selectionActions button:active:not(:disabled) {
+    background: #d8d8d8;
+}
+.selectionActions button:disabled {
+    background: transparent;
+    color: #ccc;
+    cursor: not-allowed;
+}
+.visibilityButton {
+    position: absolute;
+    right: 32px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+}
+.visibilityButton span {
+    font-size: 20px;
+    color: #aaa;
+}
+.published {
+    color: #000;
+}
+.unpublished {
+    color: #879198;
+}
+.visibilityButton:disabled {
+    opacity: 0.4;
+    cursor: wait;
+}
+.imgTitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+}
+.caption {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #66747b;
+}
+.error {
+    padding: 12px;
+    color: #d62424;
+    background: #fff0f0;
+    font-size: 14px;
+}
+.empty {
+    padding: 56px 20px;
+    text-align: center;
+    color: #78868c;
+    font-size: 14px;
+}
+.postListWrapper button:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+}

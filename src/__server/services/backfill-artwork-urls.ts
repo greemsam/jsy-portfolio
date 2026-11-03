@@ -67,12 +67,12 @@ export async function backfillArtworkUrls() {
                     displayUrl:
                         image.displayUrl ||
                         (await getOrCreateDownloadUrl(image.displayPath)),
-                }))
+                })),
             );
 
             // 변경이 필요한 작품만 Firestore 업데이트
             const needsUpdate = post.images.some(
-                (image) => !image.thumbnailUrl || !image.displayUrl
+                (image) => !image.thumbnailUrl || !image.displayUrl,
             );
 
             if (!needsUpdate) {

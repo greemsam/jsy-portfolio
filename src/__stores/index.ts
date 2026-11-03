@@ -2,8 +2,6 @@ import { create } from "zustand";
 import type { Post } from "@/__types/artwork";
 import type { DriveFile, DriveYearGroup } from "@/__types/drive";
 
-
-
 // type AdminStore = {
 //     // Firestore에 등록된 작품
 //     posts: Post[];
@@ -69,7 +67,7 @@ import type { DriveFile, DriveYearGroup } from "@/__types/drive";
 //         set({ posts });
 //     },
 //     updatePostEdit: (post) =>{
-//         set({ 
+//         set({
 //             width:post.width,
 //             height:post.height,
 //             title:post.title,

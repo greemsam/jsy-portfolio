@@ -1,21 +1,27 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
+import { getAuth } from "firebase-admin/auth";
 import type { Post } from "@/__types/artwork";
 
-const firebaseAdminApp = getApps().length === 0
-    ? initializeApp({
-        credential: cert({
-            projectId: process.env.FIREBASE_PROJECT_ID,
-            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-            privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-        }),
-        // Firebase Storage에서 사용할 기본 bucket
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    })
-    : getApps()[0];
+const firebaseAdminApp =
+    getApps().length === 0
+        ? initializeApp({
+              credential: cert({
+                  projectId: process.env.FIREBASE_PROJECT_ID,
+                  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(
+                      /\\n/g,
+                      "\n",
+                  ),
+              }),
+              // Firebase Storage에서 사용할 기본 bucket
+              storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+          })
+        : getApps()[0];
 
 export const adminDb = getFirestore(firebaseAdminApp);
+export const adminAuth = getAuth(firebaseAdminApp);
 
 export async function getPublishedArtworks(): Promise<Post[]> {
     const snapshot = await adminDb
@@ -31,7 +37,7 @@ export async function getPublishedArtworks(): Promise<Post[]> {
             title: data.title ?? "",
             description: data.description ?? "",
             medium: data.medium ?? "",
-            sizeUnit:data.sizeUnit ?? "",
+            sizeUnit: data.sizeUnit ?? "",
             width: data.width ?? "",
             height: data.height ?? "",
             tags: data.tags ?? [],
