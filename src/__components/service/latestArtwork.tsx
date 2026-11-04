@@ -42,7 +42,10 @@ export default function LatestArtwork({
                             }}
                         />
                         <div className={styles.artworkInfo}>
-                            {artwork.title}
+                            <h3>{`${artwork.title} (${artwork.year})`}</h3>
+                            <span>
+                                {`${artwork.medium}, ${artwork.width} X ${artwork.height}${artwork.sizeUnit}`}
+                            </span>
                         </div>
                     </figure>
                 ) : (
