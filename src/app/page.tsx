@@ -21,6 +21,11 @@ export default async function Home() {
         .map((post) => ({
             id: post.postId,
             title: post.title,
+            medium: post.medium,
+            width: post.width,
+            height: post.height,
+            sizeUnit: post.sizeUnit,
+            year: post.year,
             src: post.images.find(
                 (image: { displayUrl?: string; thumbnailUrl?: string }) =>
                     image.displayUrl || image.thumbnailUrl,
@@ -29,6 +34,11 @@ export default async function Home() {
         .map((post) => ({
             id: post.id,
             title: post.title,
+            medium: post.medium,
+            width: post.width,
+            height: post.height,
+            sizeUnit: post.sizeUnit,
+            year: post.year,
             src: post.src.displayUrl || post.src.thumbnailUrl,
         }));
     return (

@@ -1,9 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import type { Post } from "@/__types/artwork";
 import styles from "@/__cssModules/service/latestArtwork.module.css";
 
-export type Candidate = { id: string; title: string; src: string };
+export type Candidate = Pick<
+    Post,
+    "title" | "medium" | "width" | "height" | "sizeUnit" | "year"
+> & {
+    id: string;
+    src: string;
+};
 
 export default function LatestArtwork({
     candidates,
