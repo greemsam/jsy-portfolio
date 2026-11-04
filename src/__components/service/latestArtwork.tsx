@@ -18,25 +18,34 @@ export default function LatestArtwork({
         );
 
     return (
-        <section className={styles.gallery} aria-label="작품 갤러리">
-            {artwork ? (
-                <figure className={styles.artwork}>
-                    <img
-                        key={artwork.id}
-                        className={styles.image}
-                        src={artwork.src}
-                        alt={artwork.title}
-                        fetchPriority="high"
-                        onError={() => markFailed(artwork.id)}
-                        ref={(image) => {
-                            if (image?.complete && image.naturalWidth === 0)
-                                markFailed(artwork.id);
-                        }}
-                    />
-                </figure>
-            ) : (
-                <p className={styles.empty}>표시할 수 있는 작품이 없습니다.</p>
-            )}
-        </section>
+        <>
+            <section className={styles.gallery} aria-label="작품 갤러리">
+                {artwork ? (
+                    <figure className={styles.artwork}>
+                        <img
+                            key={artwork.id}
+                            className={styles.image}
+                            src={artwork.src}
+                            alt={artwork.title}
+                            fetchPriority="high"
+                            onError={() => markFailed(artwork.id)}
+                            ref={(image) => {
+                                if (image?.complete && image.naturalWidth === 0)
+                                    markFailed(artwork.id);
+                            }}
+                        />
+                        <div className={styles.artworkInfo}>
+                            {artwork.title}
+                        </div>
+                    </figure>
+                ) : (
+                    <p className={styles.empty}>표시할 수 있는 작품이 없습니다.</p>
+                )}
+
+                <div className={styles.artistInfo}>
+                    <h1>Vulyeppun Art</h1>
+                </div>
+            </section>
+        </>
     );
 }
