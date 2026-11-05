@@ -5,12 +5,13 @@
     background: #cdd6ce;
 }
 .artwork {
-    width:min(60%, 400px);
-    margin:min(10%, 60px) auto 0;
+    height:min(calc(100% - 200px), 500px);
+    margin:5% auto 0;
 }
 .image {
+    margin: 0 auto;
     display: block;
-    width: 100%;
+    height: 100%;
     object-fit: contain;
     border: 3px solid #e7e4db;
     box-shadow:

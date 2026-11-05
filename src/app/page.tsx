@@ -1,49 +1,36 @@
-import { getPosts } from "@/__server/services/post.service";
+import { getPublishedYears } from "@/__server/services/post.service";
+import { getHomeData } from "@/__server/services/home.service";
+import ArtworkGallery from "@/__components/service/artworkGallery";
 import styles from "@/__cssModules/service/home.module.css";
-import LatestArtwork from "@/__components/service/latestArtwork";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-    const posts = await getPosts(true);
-    const candidates = posts
-        .filter((post) =>
-            post.images.some(
-                (image: { displayUrl?: string; thumbnailUrl?: string }) =>
-                    image.displayUrl || image.thumbnailUrl,
-            ),
-        )
-        .sort((a, b) => {
-            const year = (value: string) =>
-                /^\d{4}$/.test(value.trim()) ? Number(value) : -1;
-            return year(String(b.year)) - year(String(a.year));
-        })
-        .map((post) => ({
-            id: post.postId,
-            title: post.title,
-            medium: post.medium,
-            width: post.width,
-            height: post.height,
-            sizeUnit: post.sizeUnit,
-            year: post.year,
-            src: post.images.find(
-                (image: { displayUrl?: string; thumbnailUrl?: string }) =>
-                    image.displayUrl || image.thumbnailUrl,
-            ),
-        }))
-        .map((post) => ({
-            id: post.id,
-            title: post.title,
-            medium: post.medium,
-            width: post.width,
-            height: post.height,
-            sizeUnit: post.sizeUnit,
-            year: post.year,
-            src: post.src.displayUrl || post.src.thumbnailUrl,
-        }));
+    const [years, { artwork }] = await Promise.all([
+        getPublishedYears(),
+        getHomeData(),
+    ]);
+    const image = artwork?.images.find(
+        (image) => image.displayUrl || image.thumbnailUrl,
+    );
+    const candidates =
+        artwork && image
+            ? [
+                  {
+                      id: artwork.postId,
+                      title: artwork.title,
+                      medium: artwork.medium,
+                      width: artwork.width,
+                      height: artwork.height,
+                      sizeUnit: artwork.sizeUnit,
+                      year: artwork.year,
+                      src: image.displayUrl || image.thumbnailUrl,
+                  },
+              ]
+            : [];
     return (
         <main className={styles.home}>
-            <LatestArtwork candidates={candidates} />
+            <ArtworkGallery years={years} candidates={candidates} />
         </main>
     );
 }

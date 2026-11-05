@@ -41,17 +41,19 @@ export default function LatestArtwork({
                                     markFailed(artwork.id);
                             }}
                         />
-                        <div className={styles.artworkInfo}>
-                            <h3>{`${artwork.title} (${artwork.year})`}</h3>
-                            <span>
-                                {`${artwork.medium}, ${artwork.width} X ${artwork.height}${artwork.sizeUnit}`}
-                            </span>
-                        </div>
+                        
                     </figure>
                 ) : (
                     <p className={styles.empty}>표시할 수 있는 작품이 없습니다.</p>
                 )}
-
+                {artwork ? (
+                    <div className={styles.artworkInfo}>
+                        <h3>{`${artwork.title} (${artwork.year})`}</h3>
+                        <span>
+                            {`${artwork.medium}, ${artwork.width} X ${artwork.height}${artwork.sizeUnit}`}
+                        </span>
+                    </div>
+                ):('')}
                 <div className={styles.artistInfo}>
                     <h1>Vulyeppun Art</h1>
                 </div>
