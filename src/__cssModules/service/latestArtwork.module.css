@@ -1,12 +1,14 @@
 .gallery {
+    container-type: inline-size;
     width: 100%;
     height: 100%;
-    overflow: hidden;
     background: #cdd6ce;
 }
 .artwork {
-    height:min(calc(100% - 200px), 500px);
-    margin:5% auto 0;
+    height: 70vw;
+    min-height: 60%;
+    max-height: 500px;
+    margin: min(2%, 20px) auto 0;
 }
 .image {
     margin: 0 auto;
@@ -19,26 +21,75 @@
         3px 7px 8px #18251b33,
         12px 24px 32px #18251b26;
 }
+.singleImage {
+    height: 100%;
+}
+.multiple {
+    --image-gap: max(12px, min(3.6cqw, 40px));
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--image-gap);
+    width: 90%;
+    max-width: 1000px;
+    align-content: center;
+    justify-content: center;
+}
+.imageSlot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 calc((100% - var(--image-gap)) / 2);
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+.multiple:has(> :nth-child(3)) .imageSlot {
+    height: calc((100% - var(--image-gap)) / 2);
+}
+.multiple .image {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    box-sizing: border-box;
+}
+.threeImages > :first-child {
+    margin-inline: calc((100% + var(--image-gap)) / 4);
+}
+.multiple:has(> :nth-child(4)) > :nth-child(odd) .image {
+    margin-left: auto;
+    margin-right: 0;
+}
+.multiple:has(> :nth-child(4)) > :nth-child(even) .image {
+    margin-left: 0;
+    margin-right: auto;
+}
+.multiple:has(> :nth-child(4)) > :nth-child(-n + 2) {
+    align-items: flex-end;
+}
+.multiple:has(> :nth-child(4)) > :nth-child(n + 3) {
+    align-items: flex-start;
+}
 .empty {
     font-size: 14px;
     color: #46534b;
 }
-.artworkInfo{
+.artworkInfo {
     text-align: center;
-    color:#000;
-    margin-top:30px;
+    color: #000;
+    margin-top: 30px;
 }
-.artworkInfo h3{
-    font-weight:normal;
-    font-size:16px;
+.artworkInfo h3 {
+    font-weight: normal;
+    font-size: 16px;
 }
-.artworkInfo span{
-    font-size:12px;
+.artworkInfo span {
+    font-size: 12px;
 }
-.artistInfo{
-    margin:min(10%, 20px) auto 0;
+.artistInfo {
+    margin: min(10%, 20px) auto 0;
 }
-.artistInfo h1{
+.artistInfo h1 {
     text-align: center;
     font-size: 12px;
 }

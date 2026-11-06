@@ -21,59 +21,44 @@ export default function ArtworkList({
                     return (
                         <li key={post.postId} className={styles.card}>
                             <h3>{post.title}</h3>
-                            {post.description && (
-                                <p className={styles.prose}>
-                                    {post.description}
-                                </p>
-                            )}
-                            {(post.images.length ? post.images : [null]).map(
-                                (image, index) => (
-                                    <figure key={index}>
-                                        {image ? (
-                                            <img
-                                                src={
-                                                    image.thumbnailUrl ||
-                                                    image.displayUrl
-                                                }
-                                                alt={post.title}
-                                                loading="lazy"
-                                            />
-                                        ) : (
-                                            <div className={styles.placeholder}>
-                                                이미지 없음
-                                            </div>
-                                        )}
-                                        <figcaption>
-                                            {image?.description && (
-                                                <p className={styles.prose}>
-                                                    {image.description}
-                                                </p>
-                                            )}
-                                            <p>
-                                                {image?.medium !== undefined
-                                                    ? [
-                                                          image.medium,
-                                                          image.width &&
-                                                          image.height
-                                                              ? `${image.width} X ${image.height}${image.sizeUnit ?? ""}`
-                                                              : "",
-                                                      ]
-                                                          .filter(Boolean)
-                                                          .join(", ")
-                                                    : (image?.caption ??
-                                                      [post.medium, size]
-                                                          .filter(Boolean)
-                                                          .join(", "))}
-                                            </p>
-                                        </figcaption>
-                                    </figure>
-                                ),
-                            )}
-                            {post.additionalDescription && (
-                                <p className={styles.prose}>
-                                    {post.additionalDescription}
-                                </p>
-                            )}
+                            {(post.images.length
+                                ? post.images.slice(0, 1)
+                                : [null]
+                            ).map((image, index) => (
+                                <figure key={index}>
+                                    {image?.thumbnailUrl ? (
+                                        <img
+                                            src={image.thumbnailUrl}
+                                            alt={post.title}
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <div className={styles.placeholder}>
+                                            이미지 없음
+                                        </div>
+                                    )}
+                                    <figcaption>
+                                        <p>
+                                            {post.images.length > 1
+                                                ? `+${post.images.length - 1}개의 사진`
+                                                : image?.medium !== undefined
+                                                  ? [
+                                                        image.medium,
+                                                        image.width &&
+                                                        image.height
+                                                            ? `${image.width} X ${image.height}${image.sizeUnit ?? ""}`
+                                                            : "",
+                                                    ]
+                                                        .filter(Boolean)
+                                                        .join(", ")
+                                                  : (image?.caption ??
+                                                    [post.medium, size]
+                                                        .filter(Boolean)
+                                                        .join(", "))}
+                                        </p>
+                                    </figcaption>
+                                </figure>
+                            ))}
                         </li>
                     );
                 })}

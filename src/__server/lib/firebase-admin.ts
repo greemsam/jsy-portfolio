@@ -42,7 +42,13 @@ export async function getPublishedArtworks(): Promise<Post[]> {
             width: data.width ?? "",
             height: data.height ?? "",
             tags: data.tags ?? [],
-            images: data.images ?? [],
+            images: (data.images ?? []).map(
+                (image: import("@/__types/artwork").ArtworkImage) => {
+                    const result = { ...image };
+                    delete result.displayUrl;
+                    return result;
+                },
+            ),
             published: data.published ?? false,
 
             createdAt: data.createdAt?.toDate?.().toISOString() ?? null,

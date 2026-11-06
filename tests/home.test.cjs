@@ -88,3 +88,18 @@ test("authentication and other database errors are not hidden by fallback", asyn
     const { getHomeData } = loadHome([], error);
     await assert.rejects(getHomeData, (actual) => actual === error);
 });
+
+test("home returns thumbnail metadata without exposing displayUrl or mutating stored data", async () => {
+    const image = {
+        driveFileId: "one",
+        thumbnailUrl: "thumb",
+        displayUrl: "large",
+    };
+    const { getHomeData } = loadHome([
+        { id: "one", data: () => ({ images: [image] }) },
+    ]);
+    const result = await getHomeData();
+    assert.equal(result.artwork.images[0].thumbnailUrl, "thumb");
+    assert.equal("displayUrl" in result.artwork.images[0], false);
+    assert.equal(image.displayUrl, "large");
+});

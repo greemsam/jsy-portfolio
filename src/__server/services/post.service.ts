@@ -317,7 +317,13 @@ export async function getPosts(publishedOnly = false) {
                 height: data.height ?? "",
                 sizeUnit: data.sizeUnit ?? "",
                 tags: data.tags ?? [],
-                images: data.images ?? [],
+                images: (data.images ?? []).map(
+                    (image: import("@/__types/artwork").ArtworkImage) => {
+                        const result = { ...image };
+                        delete result.displayUrl;
+                        return result;
+                    },
+                ),
                 published: data.published ?? false,
                 createdAt: data.createdAt?.toDate?.().toISOString() ?? null,
                 updatedAt: data.updatedAt?.toDate?.().toISOString() ?? null,
@@ -356,7 +362,13 @@ export async function getPublishedPosts(year: string) {
                 height: data.height ?? 0,
                 sizeUnit: data.sizeUnit ?? "",
                 tags: data.tags ?? [],
-                images: data.images ?? [],
+                images: (data.images ?? []).map(
+                    (image: import("@/__types/artwork").ArtworkImage) => {
+                        const result = { ...image };
+                        delete result.displayUrl;
+                        return result;
+                    },
+                ),
                 published: true,
                 createdAt: data.createdAt?.toDate?.().toISOString() ?? null,
                 updatedAt: data.updatedAt?.toDate?.().toISOString() ?? null,

@@ -332,7 +332,7 @@
 .artworkPreview {
     width: 100%;
     margin: 12px 0;
-    padding: 12px;
+    padding: 30px 12px;
     border: 0;
     border-radius: 4px;
     background: #f1f3f4;
@@ -490,7 +490,7 @@
 .imageGroup + .imageGroup {
     margin-top: 0;
     padding-top: 30px;
-    border-top: 1px solid #aaa;
+    border-top: 1px dashed #ccc;
 }
 .imageGroup .imageMetadata {
     margin-top: 12px;

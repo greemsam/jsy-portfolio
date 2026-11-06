@@ -204,8 +204,7 @@ export default function PostEdit({ post, onClose, onUpdate }: Props) {
                     >
                         {post.images.length ? (
                             images.map((image, index) => {
-                                const src =
-                                    image.thumbnailUrl || image.displayUrl;
+                                const src = image.thumbnailUrl;
                                 return (
                                     <figure
                                         className={`${styles.previewItem} ${styles.imageGroup}`}

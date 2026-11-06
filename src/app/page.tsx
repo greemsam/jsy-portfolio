@@ -10,24 +10,19 @@ export default async function Home() {
         getPublishedYears(),
         getHomeData(),
     ]);
-    const image = artwork?.images.find(
-        (image) => image.displayUrl || image.thumbnailUrl,
-    );
-    const candidates =
-        artwork && image
-            ? [
-                  {
-                      id: artwork.postId,
-                      title: artwork.title,
-                      medium: image.medium ?? artwork.medium,
-                      width: image.width ?? artwork.width,
-                      height: image.height ?? artwork.height,
-                      sizeUnit: image.sizeUnit ?? artwork.sizeUnit,
-                      year: artwork.year,
-                      src: image.displayUrl || image.thumbnailUrl,
-                  },
-              ]
-            : [];
+    const candidates = (artwork?.images ?? [])
+        .slice(0, 4)
+        .filter((image) => image.thumbnailUrl)
+        .map((image, index) => ({
+            id: artwork!.postId + ":" + index,
+            title: artwork!.title,
+            medium: image.medium ?? artwork!.medium,
+            width: image.width ?? artwork!.width,
+            height: image.height ?? artwork!.height,
+            sizeUnit: image.sizeUnit ?? artwork!.sizeUnit,
+            year: artwork!.year,
+            src: image.thumbnailUrl,
+        }));
     return (
         <main className={styles.home}>
             <ArtworkGallery years={years} candidates={candidates} />

@@ -11,7 +11,7 @@ export type ArtworkImage = {
     thumbnailPath: string;
     displayPath: string;
     thumbnailUrl: string;
-    displayUrl: string;
+    displayUrl?: string;
 };
 
 export type Post = {

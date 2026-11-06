@@ -58,7 +58,13 @@ export async function getHomeData(): Promise<{ artwork: Post | null }> {
             height: data.height ?? 0,
             sizeUnit: data.sizeUnit ?? "",
             tags: data.tags ?? [],
-            images: data.images ?? [],
+            images: (data.images ?? []).map(
+                (image: import("@/__types/artwork").ArtworkImage) => {
+                    const result = { ...image };
+                    delete result.displayUrl;
+                    return result;
+                },
+            ),
             published: true,
             createdAt: data.createdAt?.toDate?.().toISOString() ?? null,
             updatedAt: data.updatedAt?.toDate?.().toISOString() ?? null,
