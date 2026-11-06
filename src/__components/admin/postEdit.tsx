@@ -1,5 +1,9 @@
 "use client";
 
+import ImageMetadataFields from "./imageMetadataFields";
+import LoadingLayerPopup from "./loadingLayerPopup";
+import YesOnlyLayerPopup from "./yesOnlyLayerPopup";
+
 import { useState } from "react";
 import styles from "@/__cssModules/admin/postForm.module.css";
 import type { Post } from "@/__types/artwork";
@@ -39,13 +43,23 @@ function EditPreview({ src, alt }: { src: string; alt: string }) {
 }
 
 export default function PostEdit({ post, onClose, onUpdate }: Props) {
-    const [width, setWidth] = useState(post.width);
-    const [height, setHeight] = useState(post.height);
-    const [sizeUnit, setSizeUnit] = useState(post.sizeUnit || "mm");
-    const [medium, setMedium] = useState(post.medium);
     const [title, setTitle] = useState(post.title);
-    const [description, setDescription] = useState(post.description);
+    const description = post.description;
+    const [additionalDescription, setAdditionalDescription] = useState(
+        post.additionalDescription ?? "",
+    );
+    const [images, setImages] = useState(
+        post.images.map((image) => ({
+            ...image,
+            description: image.description ?? "",
+            medium: image.medium ?? post.medium,
+            width: image.width ?? post.width,
+            height: image.height ?? post.height,
+            sizeUnit: image.sizeUnit ?? post.sizeUnit ?? "mm",
+        })),
+    );
     const [isSaving, setIsSaving] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState("");
     const [published, setPublished] = useState(post.published);
     const handleUpdate = async () => {
@@ -56,13 +70,11 @@ export default function PostEdit({ post, onClose, onUpdate }: Props) {
             // 서버에 전달할 작품 등록 데이터
             const params = {
                 postId: post.postId,
-                width,
-                height,
-                sizeUnit,
                 title,
                 description,
-                medium,
+                additionalDescription,
                 published,
+                images,
             };
 
             const response = await fetch(`/api/posts`, {
@@ -82,15 +94,13 @@ export default function PostEdit({ post, onClose, onUpdate }: Props) {
             if (result.success) {
                 onUpdate({
                     ...post,
-                    width,
-                    height,
-                    sizeUnit,
                     title,
                     description,
-                    medium,
+                    additionalDescription,
                     published,
+                    images,
                 });
-                onClose();
+                setIsSuccess(true);
             }
         } catch (error) {
             setError(
@@ -102,6 +112,17 @@ export default function PostEdit({ post, onClose, onUpdate }: Props) {
             setIsSaving(false);
         }
     };
+    if (isSaving)
+        return <LoadingLayerPopup sentence="포스팅을 수정하고 있습니다…" />;
+    if (isSuccess) {
+        return (
+            <YesOnlyLayerPopup
+                title="수정 완료"
+                sentence="수정되었습니다."
+                onClose={onClose}
+            />
+        );
+    }
     return (
         <div className={styles.postEditCover}>
             <div
@@ -165,23 +186,53 @@ export default function PostEdit({ post, onClose, onUpdate }: Props) {
                             비공개
                         </label>
                     </fieldset>
+                    <label
+                        className={`${styles.imageMetadata} ${styles.postTitle}`}
+                    >
+                        포스팅 제목
+                        <input
+                            aria-label="포스팅 제목"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            disabled={isSaving}
+                            placeholder="제목 입력"
+                        />
+                    </label>
                     <section
                         className={styles.artworkPreview}
                         aria-label="작품 미리보기"
                     >
                         {post.images.length ? (
-                            post.images.map((image, index) => {
+                            images.map((image, index) => {
                                 const src =
                                     image.thumbnailUrl || image.displayUrl;
                                 return (
                                     <figure
-                                        className={styles.previewItem}
+                                        className={`${styles.previewItem} ${styles.imageGroup}`}
                                         key={`${image.driveFileId}-${index}`}
                                     >
                                         <EditPreview
                                             key={src}
                                             src={src}
                                             alt={`${post.title} ${index + 1}`}
+                                        />
+                                        <ImageMetadataFields
+                                            key={image.driveFileId}
+                                            label={"이미지 " + (index + 1)}
+                                            value={image}
+                                            disabled={isSaving}
+                                            onChange={(value) =>
+                                                setImages((prev) =>
+                                                    prev.map((item, i) =>
+                                                        i === index
+                                                            ? {
+                                                                  ...item,
+                                                                  ...value,
+                                                              }
+                                                            : item,
+                                                    ),
+                                                )
+                                            }
                                         />
                                     </figure>
                                 );
@@ -192,68 +243,20 @@ export default function PostEdit({ post, onClose, onUpdate }: Props) {
                             </p>
                         )}
                     </section>
-                    <fieldset
-                        className={styles.registerFields}
-                        disabled={isSaving}
+
+                    <label
+                        className={`${styles.imageMetadata} ${styles.additionalDescription}`}
                     >
-                        <div className={styles.textInfo}>
-                            <input
-                                type="text"
-                                aria-label="제목"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder={"제목 입력"}
-                            />
-                            <br />
-                            <textarea
-                                value={description}
-                                aria-label="설명"
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder={"설명 입력"}
-                            />
-                        </div>
-                        <ul>
-                            <li className={styles.postEditMedium}>
-                                <input
-                                    type="text"
-                                    placeholder="재료"
-                                    value={medium}
-                                    onChange={(e) => setMedium(e.target.value)}
-                                />
-                            </li>
-                            <li className={styles.postEditSize}>
-                                <input
-                                    type="text"
-                                    placeholder="가로"
-                                    value={width}
-                                    onChange={(e) =>
-                                        setWidth(Number(e.target.value))
-                                    }
-                                />
-                                <span>X</span>
-                                <input
-                                    type="text"
-                                    placeholder="세로"
-                                    value={height}
-                                    onChange={(e) =>
-                                        setHeight(Number(e.target.value))
-                                    }
-                                />
-                                <select
-                                    name="size-unit"
-                                    id="size-unit"
-                                    value={sizeUnit}
-                                    onChange={(e) =>
-                                        setSizeUnit(e.target.value)
-                                    }
-                                >
-                                    <option value="mm">mm</option>
-                                    <option value="cm">cm</option>
-                                    <option value="px">px</option>
-                                </select>
-                            </li>
-                        </ul>
-                    </fieldset>
+                        추가 부연설명
+                        <textarea
+                            value={additionalDescription}
+                            onChange={(event) =>
+                                setAdditionalDescription(event.target.value)
+                            }
+                            disabled={isSaving}
+                            placeholder="추가 부연설명을 입력하세요."
+                        />
+                    </label>
                     {error && (
                         <p className={styles.error} role="alert">
                             {error}

@@ -8,29 +8,21 @@ type Props = {
     acceptButtonText?: string;
     onClose: () => void;
     onCancel?: () => void;
-    onAccept?: () => void;
+    onAccept: () => void;
     disabled?: boolean;
     destructive?: boolean;
 };
-const defaultProps: Props = {
-    title: "알림",
-    sentence: "알 수 없는 오류입니다.",
-    acceptButtonText: "확인",
-    onClose() {
-        window.location.replace("/");
-    },
-};
-export default function layerPopup({
-    title,
+export default function ConfirmLayerPopup({
+    title = "알림",
     sentence,
-    cancelButtonText,
-    acceptButtonText,
+    cancelButtonText = "취소",
+    acceptButtonText = "확인",
     onClose,
     onCancel,
     onAccept,
     disabled = false,
     destructive = false,
-}: Props = defaultProps) {
+}: Props) {
     return (
         <div className={styles.cover}>
             <div
@@ -65,7 +57,7 @@ export default function layerPopup({
                     <button
                         className={`${styles.accept} ${destructive ? styles.danger : ""}`}
                         disabled={disabled}
-                        onClick={onAccept ? onAccept : onClose}
+                        onClick={onAccept}
                     >
                         {acceptButtonText}
                     </button>

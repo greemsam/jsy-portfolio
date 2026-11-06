@@ -7,12 +7,21 @@ import {
 import { uploadArtworkImage } from "@/__server/lib/firebase-storage";
 import { adminDb, adminStorage } from "@/__server/lib/firebase-admin";
 import type { DriveFile } from "@/__types/drive";
+import { MAX_POST_IMAGES } from "@/__types/artwork";
 
 type ArtworkRegisterRequest = {
     year: string;
     title: string;
     description: string;
-    images: DriveFile[];
+    additionalDescription?: string;
+    images: (DriveFile & {
+        description?: string;
+        caption?: string;
+        medium?: string;
+        width?: number;
+        height?: number;
+        sizeUnit?: string;
+    })[];
     published?: boolean;
     medium?: string;
     width?: number;
@@ -20,6 +29,12 @@ type ArtworkRegisterRequest = {
     sizeUnit?: string;
 };
 export type ArtworkImage = {
+    description: string;
+    caption: string;
+    medium: string;
+    width: number;
+    height: number;
+    sizeUnit: string;
     driveFileId: string;
     thumbnailPath: string;
     displayPath: string;
@@ -29,7 +44,14 @@ export type ArtworkImage = {
 
 async function processArtworkImage(
     year: string,
-    image: DriveFile,
+    image: DriveFile & {
+        description?: string;
+        caption?: string;
+        medium?: string;
+        width?: number;
+        height?: number;
+        sizeUnit?: string;
+    },
 ): Promise<ArtworkImage> {
     // Google Drive에서 원본 이미지 다운로드
     const originalBuffer = await downloadDriveFile(image.id);
@@ -67,6 +89,12 @@ async function processArtworkImage(
 
     // Firestore Artwork.images에 저장할 형태
     return {
+        description: image.description ?? "",
+        caption: image.caption ?? "",
+        medium: image.medium ?? "",
+        width: image.width ?? 0,
+        height: image.height ?? 0,
+        sizeUnit: image.sizeUnit ?? "mm",
         driveFileId: image.id,
         thumbnailPath: uploadedImage.thumbnailPath,
         displayPath: uploadedImage.displayPath,
@@ -78,6 +106,43 @@ export async function postArtworks(request: Request) {
     // 클라이언트에서 전달받은 작품 등록 데이터
     const data: ArtworkRegisterRequest = await request.json();
 
+    if (
+        (data.additionalDescription !== undefined &&
+            typeof data.additionalDescription !== "string") ||
+        !Array.isArray(data.images) ||
+        data.images.some(
+            (image) =>
+                !image ||
+                typeof image.id !== "string" ||
+                (image.description !== undefined &&
+                    typeof image.description !== "string") ||
+                (image.caption !== undefined &&
+                    typeof image.caption !== "string") ||
+                (image.medium !== undefined &&
+                    typeof image.medium !== "string") ||
+                (image.sizeUnit !== undefined &&
+                    typeof image.sizeUnit !== "string") ||
+                (image.width !== undefined &&
+                    (!Number.isFinite(image.width) || image.width < 0)) ||
+                (image.height !== undefined &&
+                    (!Number.isFinite(image.height) || image.height < 0)),
+        )
+    ) {
+        return Response.json(
+            { success: false, message: "이미지 설명과 캡션을 확인해 주세요." },
+            { status: 400 },
+        );
+    }
+
+    if (data.images.length > MAX_POST_IMAGES) {
+        return Response.json(
+            {
+                success: false,
+                message: `이미지는 최대 ${MAX_POST_IMAGES}개까지 등록할 수 있습니다.`,
+            },
+            { status: 400 },
+        );
+    }
     if (!data.images?.length) {
         return Response.json(
             {
@@ -98,6 +163,7 @@ export async function postArtworks(request: Request) {
         year: data.year,
         title: data.title,
         description: data.description,
+        additionalDescription: data.additionalDescription ?? "",
 
         medium: data.medium ?? "",
         width: data.width ?? 0,
@@ -245,6 +311,7 @@ export async function getPosts(publishedOnly = false) {
                 year: data.year ?? "",
                 title: data.title ?? "",
                 description: data.description ?? "",
+                additionalDescription: data.additionalDescription ?? "",
                 medium: data.medium ?? "",
                 width: data.width ?? "",
                 height: data.height ?? "",
@@ -283,6 +350,7 @@ export async function getPublishedPosts(year: string) {
                 year: data.year ?? "",
                 title: data.title ?? "",
                 description: data.description ?? "",
+                additionalDescription: data.additionalDescription ?? "",
                 medium: data.medium ?? "",
                 width: data.width ?? 0,
                 height: data.height ?? 0,

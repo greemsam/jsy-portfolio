@@ -4,10 +4,15 @@ const fs = require("node:fs");
 const vm = require("node:vm");
 const ts = require("typescript");
 
-function loadRoute(denied = false) {
+function loadRoute(denied = false, images = []) {
     const writes = [];
     let committed = false;
     const db = {
+        runTransaction: async (callback) =>
+            callback({
+                get: async () => ({ exists: true, data: () => ({ images }) }),
+                update: (ref, data) => writes.push({ id: ref.id, data }),
+            }),
         collection: () => ({
             doc: (id) => ({
                 id,
@@ -133,4 +138,66 @@ test("invalid visibility or bulk ids do not write", async () => {
         assert.equal((await route.patch(body)).status, 400);
         assert.equal(route.writes.length, 0);
     }
+});
+
+test("image metadata update preserves server image locations and other images", async () => {
+    const route = loadRoute(false, [
+        { driveFileId: "a", displayPath: "safe/a" },
+        { driveFileId: "b", displayPath: "safe/b" },
+    ]);
+    const response = await route.patch({
+        postId: "one",
+        additionalDescription: "Review",
+        images: [
+            {
+                driveFileId: "a",
+                description: "Angle A",
+                caption: "Front",
+                displayPath: "injected",
+            },
+            { driveFileId: "b", description: "Angle B", caption: "Back" },
+        ],
+    });
+    assert.equal(response.status, 200);
+    assert.equal(route.writes[0].data.images[0].displayPath, "safe/a");
+    assert.equal(route.writes[0].data.images[1].caption, "Back");
+    assert.equal(route.writes[0].data.additionalDescription, "Review");
+});
+test("unknown, duplicate and invalid image metadata cannot overwrite images", async () => {
+    for (const images of [
+        [{ driveFileId: "unknown", description: "", caption: "" }],
+        [{ driveFileId: "a", description: 1, caption: "" }],
+        [
+            { driveFileId: "a", description: "", caption: "" },
+            { driveFileId: "a", description: "", caption: "" },
+        ],
+    ]) {
+        const route = loadRoute(false, [
+            { driveFileId: "a", displayPath: "safe" },
+        ]);
+        const response = await route.patch({ postId: "one", images });
+        assert.ok([400, 409].includes(response.status));
+        assert.equal(route.writes.length, 0);
+    }
+});
+
+test("image materials and dimensions save without a free text caption", async () => {
+    const route = loadRoute(false, [{ driveFileId: "a", displayPath: "safe" }]);
+    const response = await route.patch({
+        postId: "one",
+        images: [
+            {
+                driveFileId: "a",
+                description: "Detail",
+                medium: "Oil",
+                width: 30,
+                height: 40,
+                sizeUnit: "cm",
+            },
+        ],
+    });
+    assert.equal(response.status, 200);
+    assert.equal(route.writes[0].data.images[0].medium, "Oil");
+    assert.equal(route.writes[0].data.images[0].width, 30);
+    assert.equal(route.writes[0].data.images[0].displayPath, "safe");
 });

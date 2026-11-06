@@ -36,6 +36,7 @@ export async function getPublishedArtworks(): Promise<Post[]> {
             year: data.year ?? "",
             title: data.title ?? "",
             description: data.description ?? "",
+            additionalDescription: data.additionalDescription ?? "",
             medium: data.medium ?? "",
             sizeUnit: data.sizeUnit ?? "",
             width: data.width ?? "",

@@ -77,21 +77,139 @@ export async function PATCH(request: Request) {
         );
     }
     const updates: Record<string, unknown> = {};
+    if (
+        "additionalDescription" in data &&
+        typeof data.additionalDescription !== "string"
+    ) {
+        return Response.json(
+            { success: false, message: "추가 설명을 확인해 주세요." },
+            { status: 400 },
+        );
+    }
+    if (
+        "images" in data &&
+        (!Array.isArray(data.images) ||
+            data.images.some((image: unknown) => {
+                if (!image || typeof image !== "object") return true;
+                const item = image as Record<string, unknown>;
+                return (
+                    typeof item.driveFileId !== "string" ||
+                    typeof item.description !== "string" ||
+                    (item.caption !== undefined &&
+                        typeof item.caption !== "string") ||
+                    ["medium", "sizeUnit"].some(
+                        (key) =>
+                            item[key] !== undefined &&
+                            typeof item[key] !== "string",
+                    ) ||
+                    ["width", "height"].some(
+                        (key) =>
+                            item[key] !== undefined &&
+                            (typeof item[key] !== "number" ||
+                                !Number.isFinite(item[key]) ||
+                                (item[key] as number) < 0),
+                    )
+                );
+            }) ||
+            new Set(
+                data.images.map(
+                    (image: { driveFileId: string }) => image.driveFileId,
+                ),
+            ).size !== data.images.length)
+    ) {
+        return Response.json(
+            { success: false, message: "이미지 설명과 캡션을 확인해 주세요." },
+            { status: 400 },
+        );
+    }
     for (const field of [
         "width",
         "height",
         "sizeUnit",
         "title",
         "description",
+        "additionalDescription",
         "medium",
         "published",
     ]) {
         if (data[field] !== undefined) updates[field] = data[field];
     }
-    if (!Object.keys(updates).length) {
+    if (!Object.keys(updates).length && !("images" in data)) {
         return Response.json(
             { success: false, message: "수정할 항목이 없습니다." },
             { status: 400 },
+        );
+    }
+    if ("images" in data) {
+        const ref = adminDb.collection("posts").doc(data.postId);
+        const saved = await adminDb.runTransaction(async (transaction) => {
+            const doc = await transaction.get(ref);
+            if (!doc.exists) return false;
+            const images = doc.data()?.images ?? [];
+            const metadata = new Map<
+                string,
+                {
+                    description: string;
+                    caption?: string;
+                    medium?: string;
+                    width?: number;
+                    height?: number;
+                    sizeUnit?: string;
+                }
+            >(
+                data.images.map(
+                    (image: {
+                        driveFileId: string;
+                        description: string;
+                        caption?: string;
+                        medium?: string;
+                        width?: number;
+                        height?: number;
+                        sizeUnit?: string;
+                    }) => [image.driveFileId, image],
+                ),
+            );
+            if (
+                images.length !== metadata.size ||
+                images.some(
+                    (image: { driveFileId: string }) =>
+                        !metadata.has(image.driveFileId),
+                )
+            )
+                return false;
+            transaction.update(ref, {
+                ...updates,
+                images: images.map((image: { driveFileId: string }) => ({
+                    ...image,
+                    description: metadata.get(image.driveFileId)!.description,
+                    ...Object.fromEntries(
+                        Object.entries(metadata.get(image.driveFileId)!).filter(
+                            ([key]) =>
+                                [
+                                    "caption",
+                                    "medium",
+                                    "width",
+                                    "height",
+                                    "sizeUnit",
+                                ].includes(key),
+                        ),
+                    ),
+                })),
+                updatedAt: FieldValue.serverTimestamp(),
+            });
+            return true;
+        });
+        return Response.json(
+            {
+                success: saved,
+                ...(saved
+                    ? {}
+                    : {
+                          message:
+                              "이미지 정보가 변경되었습니다. 새로고침 후 다시 시도해 주세요.",
+                      }),
+            },
+            { status: saved ? 200 : 409 },
         );
     }
     if (Object.keys(updates).some((field) => field !== "published"))

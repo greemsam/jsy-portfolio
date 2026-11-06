@@ -1,4 +1,12 @@
+export const MAX_POST_IMAGES = 4;
+
 export type ArtworkImage = {
+    description?: string;
+    caption?: string;
+    medium?: string;
+    width?: number;
+    height?: number;
+    sizeUnit?: string;
     driveFileId: string;
     thumbnailPath: string;
     displayPath: string;
@@ -11,6 +19,7 @@ export type Post = {
     year: string;
     title: string;
     description: string;
+    additionalDescription: string;
     medium: string;
     width: number;
     height: number;

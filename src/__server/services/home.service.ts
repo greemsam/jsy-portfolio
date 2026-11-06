@@ -52,6 +52,7 @@ export async function getHomeData(): Promise<{ artwork: Post | null }> {
             year: data.year ?? "",
             title: data.title ?? "",
             description: data.description ?? "",
+            additionalDescription: data.additionalDescription ?? "",
             medium: data.medium ?? "",
             width: data.width ?? 0,
             height: data.height ?? 0,

@@ -168,14 +168,15 @@
 }
 .publishOptions {
     display: flex;
-    width: fit-content;
+    width: 100%;
     min-width: 0;
     max-width: 100%;
     align-items: center;
     gap: 20px;
     border: 0;
     margin: 16px 0 12px;
-    padding: 0;
+    padding: 0 0 20px;
+    border-bottom: 1px solid #e7edef;
 }
 .publishOptions legend {
     font-size: 13px;
@@ -332,8 +333,9 @@
     width: 100%;
     margin: 12px 0;
     padding: 12px;
-    border: 1px solid #e7edef;
+    border: 0;
     border-radius: 4px;
+    background: #f1f3f4;
 }
 .artworkPreview + .registerFields .textInfo {
     margin-top: 0;
@@ -442,5 +444,225 @@
     .postEditDialog {
         padding: 20px;
         max-height: calc(100dvh - 24px);
+    }
+}
+
+.imageMetadata {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    font-size: 14px;
+}
+.imageMetadata label {
+    display: grid;
+    gap: 6px;
+}
+.imageMetadata input,
+.imageMetadata textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font: inherit;
+}
+.imageMetadata textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.postTitle {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e7edef;
+}
+.imageGroup {
+    margin: 0;
+    padding: 0;
+}
+.imageGroup:has(+ .imageGroup) {
+    padding-bottom: 30px;
+}
+.imageGroup + .imageGroup {
+    margin-top: 0;
+    padding-top: 30px;
+    border-top: 1px solid #aaa;
+}
+.imageGroup .imageMetadata {
+    margin-top: 12px;
+}
+.additionalDescription {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e7edef;
+}
+
+.imageSize {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.imageSize input {
+    min-width: 0;
+    max-width: 70px;
+    height: 30px;
+    padding: 4px 8px;
+}
+.imageMetadata .materialRow {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+}
+.materialRow input {
+    height: 30px;
+    padding: 4px 8px;
+}
+.imageSize .unitRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.unitRow select {
+    padding: 4px 8px;
+    width: 64px;
+    height: 30px;
+}
+
+.registerImageGroup {
+    position: relative;
+    padding-top: 40px;
+}
+.registerImageGroup + .registerImageGroup {
+    padding-top: 70px;
+}
+.registerImageGroup:has(.imagePicker) {
+    padding-top: 0;
+}
+.registerImageGroup + .registerImageGroup:has(.imagePicker) {
+    padding-top: 30px;
+}
+.removeImage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+.removeImage > span {
+    font-size: 20px;
+}
+.registerImageGroup + .registerImageGroup .removeImage {
+    top: 30px;
+}
+.reselectPreview {
+    position: relative;
+}
+.reselectImage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 4px;
+    background: #000b;
+    color: #fff;
+    opacity: 0;
+    cursor: pointer;
+}
+.reselectPreview:hover .reselectImage,
+.reselectPreview:focus-within .reselectImage {
+    opacity: 1;
+}
+.addImage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    height: 40px;
+    margin-top: 12px;
+    border: 0;
+    border-radius: 4px;
+    background: #f1f3f4;
+    cursor: pointer;
+}
+.addImage {
+    color: #aaa;
+}
+.addImage:hover:enabled {
+    color: #000;
+}
+.addImage:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+.imagePicker .yearSelection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 0;
+    min-height: 30px;
+    padding-right: 40px;
+}
+.imageChoices {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+    gap: 6px;
+    margin-top: 12px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+.imageChoices button,
+.cancelImageSelection {
+    padding: 10px;
+    border: 0;
+    border-radius: 4px;
+    background: #fff;
+    color: #253238;
+    text-align: left;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+.imageChoices button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+.imageChoices button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    padding: 6px;
+}
+.imageChoices button > :first-child {
+    flex-shrink: 0;
+    font-size: 18px;
+}
+.imageChoices button:hover:enabled,
+.imageChoices button:focus-visible {
+    background: #000;
+    color: #fff;
+}
+.cancelImageSelection {
+    margin-top: 12px;
+}
+@media (hover: none) {
+    .reselectImage {
+        opacity: 1;
     }
 }

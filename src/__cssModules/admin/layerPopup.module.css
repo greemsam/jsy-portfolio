@@ -69,3 +69,29 @@
     outline: 2px solid #000;
     outline-offset: 3px;
 }
+
+.loading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+}
+.spinner {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    border: 3px solid #e3e8eb;
+    border-top-color: #253238;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .spinner {
+        animation: none;
+    }
+}

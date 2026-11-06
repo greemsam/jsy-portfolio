@@ -2,7 +2,7 @@
 
 import styles from "@/__cssModules/admin/postLists.module.css";
 import PostImage from "./postImage";
-import LayerPopup from "./layerPopup";
+import ConfirmLayerPopup from "./confirmLayerPopup";
 import type { Post } from "@/__types/artwork";
 import { useState } from "react";
 
@@ -77,6 +77,7 @@ export default function PostLists({
     const updateDate = (date: null | string) =>
         !date ? "" : new Intl.DateTimeFormat("ko-KR").format(new Date(date));
     const caption = (post: Post) => {
+        post = { ...post, ...post.images[0] };
         const width = post.width || "";
         const height = post.height || "";
         const size =
@@ -305,7 +306,7 @@ export default function PostLists({
                 ))}
             </ul>
             {publishRequest && (
-                <LayerPopup
+                <ConfirmLayerPopup
                     title="공개 여부 변경"
                     sentence={`${publishRequest.postIds.length > 1 ? `${publishRequest.postIds.length}개 작품을 ` : ""}${publishRequest.published ? "공개" : "비공개"}로 전환하시겠습니까?${error ? ` ${error}` : ""}`}
                     cancelButtonText="취소"
@@ -324,7 +325,7 @@ export default function PostLists({
                 />
             )}
             {isDeleteConfirmOpened && (
-                <LayerPopup
+                <ConfirmLayerPopup
                     sentence={`${pendingPostIds.length}개 작품을 삭제하시겠습니까?`}
                     destructive
                     title="작품 삭제"
