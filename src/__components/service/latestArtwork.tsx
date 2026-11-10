@@ -89,7 +89,8 @@ export default function LatestArtwork({
                 )}
                 {artwork ? (
                     <div className={styles.artworkInfo}>
-                        <h3>{`${artwork.title} (${artwork.year})`}</h3>
+                        <h3>{artwork.title}</h3>
+                        <p>{artwork.year}</p>
                         {!isMultiple && (
                             <span>
                                 {`${artwork.medium}, ${artwork.width} X ${artwork.height}${artwork.sizeUnit}`}

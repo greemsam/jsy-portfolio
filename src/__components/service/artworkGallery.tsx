@@ -60,30 +60,34 @@ export default function ArtworkGallery({
                     </button>
                 ))}
             </nav>
-            <div className={styles.content}>
-                {selectedYear === null ? (
+            {selectedYear === null ? (
+                <div className={styles.latestContent}>
                     <LatestArtwork candidates={candidates} />
-                ) : errors[selectedYear] ? (
-                    <div className={styles.list} role="alert">
-                        <p>{errors[selectedYear]}</p>
-                        <button
-                            type="button"
-                            onClick={() => void selectYear(selectedYear)}
-                        >
-                            다시 시도
-                        </button>
-                    </div>
-                ) : cache[selectedYear] ? (
-                    <ArtworkList
-                        year={selectedYear}
-                        posts={cache[selectedYear]}
-                    />
-                ) : (
-                    <p className={styles.list} role="status">
-                        작품을 불러오는 중입니다.
-                    </p>
-                )}
-            </div>
+                </div>
+            ) : (
+                <div className={styles.previousContent}>
+                    {errors[selectedYear] ? (
+                        <div className={styles.list} role="alert">
+                            <p>{errors[selectedYear]}</p>
+                            <button
+                                type="button"
+                                onClick={() => void selectYear(selectedYear)}
+                            >
+                                다시 시도
+                            </button>
+                        </div>
+                    ) : cache[selectedYear] ? (
+                        <ArtworkList
+                            year={selectedYear}
+                            posts={cache[selectedYear]}
+                        />
+                    ) : (
+                        <p className={styles.list} role="status">
+                            작품을 불러오는 중입니다.
+                        </p>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

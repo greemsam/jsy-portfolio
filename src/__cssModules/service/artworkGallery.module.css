@@ -1,8 +1,6 @@
 .gallery {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
     background: #cdd6ce;
 }
 .years {
@@ -31,10 +29,17 @@
     outline: 2px solid #27372c;
     outline-offset: 3px;
 }
-.content {
-    flex: 1;
+.latestContent {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    transform: translateY(-50%);
     min-height: 0;
-    overflow: auto;
+}
+.previousContent {
+    width: 100%;
+    min-height: 0;
 }
 .list {
     max-width: 1200px;
@@ -48,12 +53,12 @@
 }
 .grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
     gap: 36px 24px;
 }
 .card {
-    width: fit-content;
+    width: 100%;
     max-width: 100%;
     justify-self: center;
     display: flex;
@@ -68,6 +73,30 @@
     width: 100%;
     margin: 0;
 }
+.thumbnail {
+    height: 280px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.thumbnail[data-status="loading"] {
+    background: #bec9bf;
+}
+.thumbnail img {
+    opacity: 0;
+}
+.thumbnail[data-status="loaded"] img {
+    opacity: 1;
+}
+.card img {
+    box-sizing: border-box;
+    border: 3px solid #e7e4db;
+    box-shadow:
+        0 1px 2px #0005,
+        3px 7px 8px #18251b33,
+        12px 24px 32px #18251b26;
+}
 .card img,
 .placeholder {
     display: block;
@@ -77,6 +106,7 @@
     max-height: 280px;
     object-fit: contain;
     object-position: center;
+    margin-inline: auto;
 }
 .placeholder {
     width: 240px;
@@ -94,10 +124,10 @@
     contain: inline-size;
     width: 100%;
     margin: 0;
-    text-align: left;
-    font-size: 16px;
+    text-align: center;
+    font-size: 14px;
     font-weight: 400;
-    line-height: 24px;
+    line-height: 20px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -107,14 +137,19 @@
     overflow-wrap: anywhere;
 }
 .card p {
-    margin: 0;
+    margin: 6px 0 0 0;
     font-size: 12px;
     color: #46534b;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 425px) {
     .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 @media (max-width: 600px) {
@@ -122,7 +157,6 @@
         padding: 20px 12px 36px;
     }
     .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 24px 12px;
     }
 }
