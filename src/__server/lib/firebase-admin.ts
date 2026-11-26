@@ -1,8 +1,5 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import { getStorage } from "firebase-admin/storage";
-import { getAuth } from "firebase-admin/auth";
-import type { Post } from "@/__types/artwork";
 
 const firebaseAdminApp =
     getApps().length === 0
@@ -15,45 +12,7 @@ const firebaseAdminApp =
                       "\n",
                   ),
               }),
-              // Firebase Storage에서 사용할 기본 bucket
-              storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
           })
         : getApps()[0];
 
 export const adminDb = getFirestore(firebaseAdminApp);
-export const adminAuth = getAuth(firebaseAdminApp);
-
-export async function getPublishedArtworks(): Promise<Post[]> {
-    const snapshot = await adminDb
-        .collection("artworks")
-        .where("published", "==", true)
-        .get();
-
-    return snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-            postId: doc.id,
-            year: data.year ?? "",
-            title: data.title ?? "",
-            description: data.description ?? "",
-            additionalDescription: data.additionalDescription ?? "",
-            medium: data.medium ?? "",
-            sizeUnit: data.sizeUnit ?? "",
-            width: data.width ?? "",
-            height: data.height ?? "",
-            tags: data.tags ?? [],
-            images: (data.images ?? []).map(
-                (image: import("@/__types/artwork").ArtworkImage) => {
-                    const result = { ...image };
-                    delete result.displayUrl;
-                    return result;
-                },
-            ),
-            published: data.published ?? false,
-
-            createdAt: data.createdAt?.toDate?.().toISOString() ?? null,
-            updatedAt: data.updatedAt?.toDate?.().toISOString() ?? null,
-        };
-    });
-}
-export const adminStorage = getStorage(firebaseAdminApp);

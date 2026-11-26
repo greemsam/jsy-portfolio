@@ -68,7 +68,7 @@ test("missing or invalid year is rejected before querying", async () => {
     assert.equal(service.reads.length, 0);
 });
 
-test("admin and public reads omit displayUrl while preserving stored image data", async () => {
+test("public reads omit displayUrl while preserving stored image data", async () => {
     const image = {
         driveFileId: "one",
         thumbnailUrl: "thumb",
@@ -87,4 +87,15 @@ test("admin and public reads omit displayUrl while preserving stored image data"
         assert.equal("displayUrl" in result[0].images[0], false);
     }
     assert.equal(image.displayUrl, "large");
+});
+
+test("all-posts public query always restricts reads to published works", async () => {
+    const service = loadService([
+        { id: "draft", data: () => ({ published: false }) },
+        { id: "public", data: () => ({ published: true }) },
+    ]);
+    const posts = await service.getPosts();
+    assert.deepEqual(service.reads, [[["published", "==", true]]]);
+    assert.equal(posts.length, 1);
+    assert.equal(posts[0].postId, "public");
 });
