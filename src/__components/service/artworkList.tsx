@@ -50,7 +50,7 @@ export default function ArtworkList({
             <ul className={styles.grid}>
                 {posts.map((post, postIndex) => {
                     const size =
-                        post.width && post.height
+                        post.width > 0 && post.height > 0
                             ? `${post.width} X ${post.height}${post.sizeUnit ? ` ${post.sizeUnit}` : ""}`
                             : "";
                     return (
@@ -80,8 +80,9 @@ export default function ArtworkList({
                                                 : image?.medium !== undefined
                                                   ? [
                                                         image.medium,
-                                                        image.width &&
-                                                        image.height
+                                                        (image.width ?? 0) >
+                                                            0 &&
+                                                        (image.height ?? 0) > 0
                                                             ? `${image.width} X ${image.height}${image.sizeUnit ?? ""}`
                                                             : "",
                                                     ]

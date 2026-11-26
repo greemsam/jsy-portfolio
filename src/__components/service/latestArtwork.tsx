@@ -90,12 +90,19 @@ export default function LatestArtwork({
                 {artwork ? (
                     <div className={styles.artworkInfo}>
                         <h3>{artwork.title}</h3>
-                        <p>{artwork.year}</p>
-                        {!isMultiple && (
-                            <span>
-                                {`${artwork.medium}, ${artwork.width} X ${artwork.height}${artwork.sizeUnit}`}
-                            </span>
-                        )}
+                        <p>
+                            {[
+                                !isMultiple ? artwork.medium : "",
+                                !isMultiple &&
+                                artwork.width > 0 &&
+                                artwork.height > 0
+                                    ? `${artwork.width} X ${artwork.height}${artwork.sizeUnit ?? ""}`
+                                    : "",
+                                artwork.year,
+                            ]
+                                .filter(Boolean)
+                                .join(", ")}
+                        </p>
                     </div>
                 ) : (
                     ""

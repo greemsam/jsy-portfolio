@@ -43,7 +43,12 @@ for (const count of [1, 2, 3, 4])
         assert.equal((html.match(/<img /g) || []).length, count);
         assert.equal(html.includes('class="artworkInfo"'), true);
         assert.equal(html.includes("<h3>Series</h3>"), true);
-        assert.equal(html.includes("<p>2026</p>"), true);
+        assert.equal(
+            html.includes(
+                count === 1 ? "<p>Oil, 10 X 20cm, 2026</p>" : "<p>2026</p>",
+            ),
+            true,
+        );
         assert.equal(html.includes("Oil, 10 X 20cm"), count === 1);
         assert.equal(html.includes("threeImages"), count === 3);
         assert.equal(html.includes("multiple"), count > 1);
